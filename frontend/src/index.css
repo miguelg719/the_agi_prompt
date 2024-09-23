@@ -1,0 +1,5 @@
+@import "@fontsource/montserrat"; 
+@import "@fontsource/montserrat-subrayada";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
