@@ -1,8 +1,8 @@
 import React from 'react';
-import { MessageSquare, ThumbsUp, ThumbsDown, Tag, User } from 'lucide-react';
+import { ThumbsUp, ThumbsDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const LeaderboardCard = ({ prompt, votes, id }) => (
+const LeaderboardCard = ({ title, votes, id }) => (
     <div className="bg-gray-800 p-4 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300 mb-6">
       <div className="flex justify-between items-center">
         <span className='text-white ml-4 md:text-xl text-slate-400'>
@@ -10,7 +10,7 @@ const LeaderboardCard = ({ prompt, votes, id }) => (
         </span>
         <h3 className="md:text-xl font-semibold text-white flex-grow">
           <Link to={"/prompt_test"} className="hover:text-blue-400">
-            {prompt}
+            {title}
           </Link>
         </h3>
             <div className="flex justify-between items-center ml-4">

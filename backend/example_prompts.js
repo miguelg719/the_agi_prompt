@@ -1,7 +1,3 @@
-const mongoose = require('mongoose');
-const Prompt = require('./models/prompt');  // Assuming your model is in models/prompt.js
-const connectDB = require('./config/db');   // Your database connection file
-
 const prompts = [
   {
     id: 1,
@@ -22,7 +18,7 @@ const prompts = [
     tags: ["Explainable AI", "Natural Language", "Reasoning"]
   },
   {
-    id: 5,
+    id: 6,
     title: "Design an AGI framework that can seamlessly integrate and utilize multiple specialized AI models",
     votes: 82,
     comments: 27,
@@ -181,17 +177,3 @@ const prompts = [
     `
   }
 ];
-
-const postSamplePrompts = async () => {
-  try {
-    await connectDB();  // Connect to MongoDB Atlas
-    await Prompt.insertMany(prompts);  // Insert all the prompts
-    console.log('Prompts have been successfully inserted!');
-  } catch (error) {
-    console.error('Error inserting prompts:', error.message);
-  } finally {
-    mongoose.connection.close();  // Close the connection when done
-  }
-};
-
-postSamplePrompts();

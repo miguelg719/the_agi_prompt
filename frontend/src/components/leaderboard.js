@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, ChevronDown, ThumbsUp, MessageSquare, User, Tag } from 'lucide-react';
+import { Search, ChevronDown, Tag } from 'lucide-react';
 import LeaderboardCard from './leaderboard-card';
 
 const PromptLeaderboard = () => {
@@ -105,6 +105,7 @@ const PromptLeaderboard = () => {
     const fetchPrompts = async () => {
       const response = await fetch('http://localhost:3000/api/prompts');
       const data = await response.json();
+      console.log(data);
       setPrompts(data);
     };
     fetchPrompts();
@@ -112,7 +113,7 @@ const PromptLeaderboard = () => {
 
   const filteredPrompts = prompts
     .filter(prompt => 
-      prompt.prompt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      prompt.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       prompt.author.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .filter(prompt => 
