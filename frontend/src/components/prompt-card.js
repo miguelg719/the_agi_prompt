@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { MessageSquare, ThumbsUp, ThumbsDown, Tag, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
 

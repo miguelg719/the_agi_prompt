@@ -5,6 +5,8 @@ const promptRoutes = require('./routes/promptRoutes');
 const app = express();
 const port = process.env.PORT || 3000;
 
+require('dotenv').config();
+
 // Enable CORS for all origins 
 app.use(cors()); 
 

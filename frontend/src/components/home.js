@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Search, ChevronDown, Plus, Tag} from 'lucide-react';
 import PromptCard from './prompt-card';
 import FeaturedCard from './featured-card';
@@ -51,6 +51,33 @@ const Home = () => {
         author: "LLM Hacks",
         createdAt: "2024-07-13T09:15:00Z",
         tags: ["LLM", "Integration", "General AI"]
+    },
+    {
+      id: 6,
+      prompt: "Design an AGI framework that can seamlessly integrate and utilize multiple specialized AI models",
+      votes: 82,
+      comments: 27,
+      author: "AIArchitect",
+      createdAt: "2024-07-13T09:15:00Z",
+      tags: ["Framework", "Integration", "Specialized AI"]
+    },
+    {
+        id: 7,
+        prompt: "Claude June 2024",
+        votes: 52,
+        comments: 7,
+        author: "Anthropic",
+        createdAt: "2024-07-13T09:15:00Z",
+        tags: ["LLM", "Integration", "General AI"]
+    },
+    {
+        id: 8,
+        prompt: "Gemini Cracked Woke Prompt",
+        votes: 21,
+        comments: 100,
+        author: "LLM Hacks",
+        createdAt: "2024-07-13T09:15:00Z",
+        tags: ["LLM", "Integration", "General AI"]
     }
   ];
 
@@ -97,7 +124,7 @@ const Home = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
-              <div>
+              <div className="max-h-screen overflow-y-auto">
                 {samplePrompts.map((prompt) => (
                   <PromptCard key={prompt.id} {...prompt} />
                 ))}
@@ -107,7 +134,7 @@ const Home = () => {
                 <div className="bg-gray-800 p-4 rounded-lg shadow-md">
                     <h2 className="text-xl font-semibold mb-4 text-white-500 underline underline-offset-8">Featured Prompts</h2>
                     <div className='divide-y divide-gray-600'>  
-                        {samplePrompts.map((prompt, index) => (
+                        {samplePrompts.slice(0,5).map((prompt, index) => (
                             <FeaturedCard
                             key={prompt.id}
                             rank={index + 1}

@@ -1,11 +1,7 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 const promptSchema = new mongoose.Schema({
-  id: {
-    type: Number,
-    required: true,
-    unique: true
-  },
   title: {
     type: String,
     required: true
@@ -14,14 +10,18 @@ const promptSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  votes: {
+  upvotes: {
     type: Number,
     default: 0
   },
-  comments: {
+  downvotes: {
     type: Number,
     default: 0
   },
+  comments: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Comment'  // Reference to the Comment model
+  }],
   author: {
     type: String,
     required: true

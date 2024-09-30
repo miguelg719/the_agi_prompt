@@ -122,7 +122,8 @@ const PromptLeaderboard = () => {
         tag.toLowerCase().includes(filterTerm.toLowerCase())
       )
     )
-    .sort((a, b) => b.votes - a.votes);
+    .sort((a, b) => (b.upvotes-b.downvotes) - (a.upvotes-a.downvotes))
+    .slice(0, 10);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white mt-7">
@@ -163,8 +164,8 @@ const PromptLeaderboard = () => {
 
         <div className="">
           <div className="">
-            {filteredPrompts.map((prompt) => (
-              <LeaderboardCard key={prompt.id} {...prompt} />
+            {filteredPrompts.map((prompt, index) => (
+              <LeaderboardCard key={prompt.id} index={index} {...prompt} />
             ))}
           </div>
         </div>
