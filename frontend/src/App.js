@@ -20,7 +20,7 @@ function App() {
           <Route path="/" element={<Intro />} />
           <Route path="/home" element={<Home />} /> 
           <Route path="/leaderboard" element={<Leaderboard />} /> 
-          <Route path="/prompt_test" element={<PromptView />} />
+          <Route path="/prompt/:id" element={<PromptView />} />
           <Route path="/login" element={<LoginSignup />} />
           <Route path="/profile" element={<ProfilePage />} />
         </Routes>

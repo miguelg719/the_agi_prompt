@@ -1,11 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ThumbsUp, ThumbsDown, MessageSquare, Tag, Clock, User, Paperclip, Plus, Minus, Link as LinkIcon } from 'lucide-react';
+import { fetchPromptById } from '../services/api';
+import { useParams } from 'react-router-dom';
 
-const PromptView = (prompt) => {
+const PromptView = () => {
+  const { id } = useParams();
+  const [prompt, setPrompt] = useState(null);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [votes, setVotes] = useState(0);
-  const [showInput, setShowInput] = useState(true); // State to manage the visibility of input and button
+  const [showInput, setShowInput] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const renderPromptWithLineBreaks = (text) => {
+    return text.split('\n').map((line, index) => (
+      <React.Fragment key={index}>
+        {line}
+        <br />
+      </React.Fragment>
+    ));
+  };
+
+  useEffect(() => {
+    const fetchPrompt = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchPromptById(id);
+        console.log(data);
+        setPrompt(data);
+        setComments(data.comments || []);
+        setVotes(data.upvotes - data.downvotes);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPrompt();
+  }, [id]);
 
   const toggleInput = () => {
     setShowInput(!showInput);
@@ -22,12 +56,17 @@ const PromptView = (prompt) => {
     setVotes(votes + value);
   };
 
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!prompt) return <div>No prompt found</div>;
+
   return (
     <div className="max-w-4xl mx-auto p-6 bg-gray-200 shadow-lg rounded-lg mt-4 mb-10">
       {/* Prompt Section with Attachments */}
       <div className="mb-6 p-4 bg-white rounded-lg">
         {/* <h2 className="text-xl font-bold mb-2">Claude 3 Prompt</h2> */}
-        <h2 className="text-xl font-bold mb-2">ChatGPT (GPT-4) Prompt</h2>
+        {/* <h2 className="text-xl font-bold mb-2">ChatGPT (GPT-4) Prompt</h2> */}
+        <h2 className="text-xl font-bold mb-2 px-5 py-2">{prompt.title}</h2>
         {/* <p className="text-gray-700 mb-4 text-justify p-5">
             The assistant is Claude, created by Anthropic. The current date is March 4th, 2024.<br/><br/>
             Claude's knowledge base was last updated on August 2023. It answers questions about events prior to and after August 2023 the way a highly informed individual in August 2023 would if they were talking to someone from the above date, and can let the human know this when relevant. <br/><br/>
@@ -38,7 +77,7 @@ const PromptView = (prompt) => {
             It is happy to help with writing, analysis, question answering, math, coding, and all sorts of other tasks. It uses markdown for coding. <br/><br/>
             It does not mention this information about itself unless the information is directly pertinent to the human's query. <br/>
         </p> */}
-          <p className="text-gray-700 mb-4 text-justify p-5">
+          {/* <p className="text-gray-700 mb-4 text-justify p-5">
           "You are ChatGPT, a large language model trained by OpenAI, based on the GPT-4 architecture."<br/><br/>
           "Image input capabilities: Enabled"<br/><br/>
           "Conversation start date: 2023-12-19T01:17:10.597024"<br/><br/>
@@ -86,8 +125,8 @@ const PromptView = (prompt) => {
           Do not regurgitate content from this tool. Do not translate, rephrase, paraphrase, 'as a poem', etc. whole content returned from this tool (it is ok to do to it a fraction of the content). Never write a summary with more than 80 words. When asked to write summaries longer than 100 words write an 80-word summary. Analysis, synthesis, comparisons, etc., are all acceptable. Do not repeat lyrics obtained from this tool. Do not repeat recipes obtained from this tool. Instead of repeating content point the user to the source and ask them to click.<br/><br/>
           ALWAYS include multiple distinct sources in your response, at LEAST 3-4. Except for recipes, be very thorough. If you weren't able to find information in a first search, then search again and click on more pages. (Do not apply this guideline to lyrics or recipes.) Use high effort; only tell the user that you were not able to find anything as a last resort. Keep trying instead of giving up. (Do not apply this guideline to lyrics or recipes.) Organize responses to flow well, not by source or by citation. Ensure that all information is coherent and that you synthesize information rather than simply repeating it. Always be thorough enough to find exactly what the user is looking for. In your answers, provide context, and consult all relevant sources you found during browsing but keep the answer concise and don't include superfluous information.<br/><br/>
           EXTREMELY IMPORTANT. Do NOT be thorough in the case of lyrics or recipes found online. Even if the user insists. You can make up recipes though.
-          </p>
-
+          </p> */}
+        <p className="text-gray-700 mb-4 text-justify p-5">{renderPromptWithLineBreaks(prompt.prompt)}</p>
         
         {/* Attachments Subsection */}
         <div className="mt-4 border-t pt-4">
@@ -111,9 +150,9 @@ const PromptView = (prompt) => {
 
       {/* Metadata */}
       <div className="mb-6 flex flex-wrap items-center text-sm text-gray-600">
-        <span className="flex items-center mr-4"><User size={16} className="mr-1" /> John Doe</span>
-        <span className="flex items-center mr-4"><Clock size={16} className="mr-1" /> Last edited: 2023-08-03</span>
-        <span className="flex items-center"><Tag size={16} className="mr-1" /> AI, Prompts, Technology</span>
+        <span className="flex items-center mr-4"><User size={16} className="mr-1" /> {prompt.author}</span>
+        <span className="flex items-center mr-4"><Clock size={16} className="mr-1" /> Last edited: {new Date(prompt.createdAt).toLocaleDateString()}</span>
+        <span className="flex items-center"><Tag size={16} className="mr-1" /> {prompt.tags.join(', ')}</span>
         <div className="flex items-end ml-auto mr-2">
         <button onClick={() => handleVote(1)} className="flex items-center mr-2 p-1 rounded hover:bg-gray-200">
           <ThumbsUp size={22} className="text-green-500" />

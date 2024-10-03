@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Intro = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -38,9 +39,11 @@ const Intro = () => {
              style={{ transform: `translateY(${-scrollPosition * 0.1}px)` }}>
             Collaborate on the future of AI
           </p> */}
-          <button className="bg-white text-black py-3 px-8 rounded-full text-lg font-semibold hover:bg-opacity-90 transition duration-300">
-            Explore Prompts
-          </button>
+          <Link to={'/home'}>
+            <button className="bg-white text-black py-3 px-8 rounded-full text-lg font-semibold hover:bg-opacity-90 transition duration-300">
+              Explore Prompts
+            </button>
+          </Link>
         </div>
         <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
           <ChevronDown size={32} />

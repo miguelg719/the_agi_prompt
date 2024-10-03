@@ -1,9 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, ChevronDown, Plus, Tag} from 'lucide-react';
 import PromptCard from './prompt-card';
 import FeaturedCard from './featured-card';
+import { useAuth } from '../context/AuthContext';
 
 const Home = () => {
+
+  const { isAuthenticated } = useAuth();
+  const [prompts, setPrompts] = useState([]);
+
+  useEffect(() => {
+    const fetchPrompts = async () => {
+      const response = await fetch('http://localhost:3000/api/prompts');
+      const data = await response.json();
+      setPrompts(data);
+    };
+    fetchPrompts();
+  }, []);
 
   // Sample data for demonstration
   const samplePrompts = [
@@ -114,18 +127,20 @@ const Home = () => {
               />
             </div>
           </div>
-          <button
-            className="flex items-center py-2 px-5 rounded-full transition-colors duration-300 bg-blue-600 text-white hover:bg-blue-500 ml-auto"
-          >
-            New Prompt
-            <Plus className="ml-2" />
-          </button>
+          {isAuthenticated && ( // Conditionally render the New Prompt button
+            <button
+              className="flex items-center py-2 px-5 rounded-full transition-colors duration-300 bg-blue-600 text-white hover:bg-blue-500 ml-auto"
+            >
+              New Prompt
+              <Plus className="ml-2" />
+            </button>
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
-              <div className="max-h-screen overflow-y-auto">
-                {samplePrompts.map((prompt) => (
+              <div className="max-h-screen overflow-y-auto scrollbar-hidden">
+                {prompts.map((prompt) => (
                   <PromptCard key={prompt.id} {...prompt} />
                 ))}
               </div>
