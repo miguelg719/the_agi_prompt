@@ -32,7 +32,8 @@ const CreatePrompt = () => {
           title,
           prompt,
           tags,
-          author: 'test6', // Replace with actual user data when available
+          // TODO: Replace with current logged in user info
+          author: 'test6', 
         };
 
         const response = await createPrompt(newPrompt);
