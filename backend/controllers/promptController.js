@@ -26,15 +26,12 @@ exports.getPromptById = async (req, res) => {
 // Create a new prompt
 exports.createPrompt = async (req, res) => {
   try {
-    const { id, title, prompt, author, tags, votes, comments } = req.body;
+    const { title, prompt, author, tags } = req.body;
     const newPrompt = new Prompt({
-      id,
       title,
       prompt,
       author,
-      tags,
-      votes,
-      comments
+      tags
     });
 
     const savedPrompt = await newPrompt.save();

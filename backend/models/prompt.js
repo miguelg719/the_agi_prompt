@@ -23,7 +23,8 @@ const promptSchema = new mongoose.Schema({
     ref: 'Comment'  // Reference to the Comment model
   }],
   author: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref: 'Author',
     required: true
   },
   createdAt: {

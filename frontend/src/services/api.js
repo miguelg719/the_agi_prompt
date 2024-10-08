@@ -29,3 +29,14 @@ export const fetchPromptById = async (id) => {
       throw error;
     }
   };
+
+export const createPrompt = async (promptData) => {
+		try {
+				console.log(promptData);
+				const response = await axios.post(`${API_URL}/prompts`, promptData);
+				return response.data;
+		} catch (error) {
+				console.error('Error creating prompt:', error);
+				throw error;
+		}
+	};
