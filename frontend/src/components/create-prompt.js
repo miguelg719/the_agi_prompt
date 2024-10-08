@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { PlusIcon } from 'lucide-react';
+import { createPrompt } from '../services/api'; 
 
 const CreatePrompt = () => {
     const [title, setTitle] = useState('');
     const [prompt, setPrompt] = useState('');
     const [tags, setTags] = useState([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState(null);
   
     const handleAddTag = (e) => {
       if (e.key === 'Enter' && e.target.value) {
@@ -17,10 +20,36 @@ const CreatePrompt = () => {
       setTags(tags.filter(tag => tag !== tagToRemove));
     };
   
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
       e.preventDefault();
       // Handle form submission here
       console.log({ title, prompt, tags });
+      setIsSubmitting(true);
+      setError(null);
+
+      try {
+        const newPrompt = {
+          title,
+          prompt,
+          tags,
+          author: 'test6', // Replace with actual user data when available
+        };
+
+        const response = await createPrompt(newPrompt);
+        console.log('Prompt created:', response);
+        
+        // Clear form after successful submission
+        setTitle('');
+        setPrompt('');
+        setTags([]);
+        
+        // You might want to show a success message or redirect the user
+      } catch (err) {
+        setError('Failed to create prompt. Please try again.');
+        console.error('Error creating prompt:', err);
+      } finally {
+        setIsSubmitting(false);
+      }
     };
   
     return (
@@ -29,6 +58,7 @@ const CreatePrompt = () => {
           <h1 className="text-2xl font-bold mb-6 text-white">Create New Prompt</h1>
           
           <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-6 bg-gray-200 shadow-lg rounded-lg mt-4 mb-10 text-left">
+            {error && <div className="text-red-500 mb-4">{error}</div>}
             <div className="mb-6">
               <label htmlFor="title" className="block mb-2 ml-3 text-xl font-semibold">Title</label>
               <input
@@ -75,7 +105,7 @@ const CreatePrompt = () => {
             <div className="flex justify-end mt-6">
               <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md flex items-center hover:bg-blue-600 transition-colors">
                 <PlusIcon className="mr-2" size={20} />
-                Publish Prompt
+                {isSubmitting ? 'Publishing...' : 'Publish Prompt'}
               </button>
             </div>
           </form>
