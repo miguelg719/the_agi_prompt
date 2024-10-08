@@ -3,6 +3,7 @@ import { Search, ChevronDown, Plus, Tag} from 'lucide-react';
 import PromptCard from './prompt-card';
 import FeaturedCard from './featured-card';
 import { useAuth } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
 
@@ -128,12 +129,14 @@ const Home = () => {
             </div>
           </div>
           {isAuthenticated && ( // Conditionally render the New Prompt button
-            <button
-              className="flex items-center py-2 px-5 rounded-full transition-colors duration-300 bg-blue-600 text-white hover:bg-blue-500 ml-auto"
-            >
-              New Prompt
-              <Plus className="ml-2" />
-            </button>
+            <Link to={'/prompt'}>
+              <button
+                className="flex items-center py-2 px-5 rounded-full transition-colors duration-300 bg-blue-600 text-white hover:bg-blue-500 ml-auto"
+              >
+                New Prompt
+                <Plus className="ml-2" />
+              </button>
+            </Link>
           )}
         </div>
 
