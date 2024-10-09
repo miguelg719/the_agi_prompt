@@ -1,6 +1,6 @@
 const User = require('../models/user');
 const bcrypt = require('bcrypt');  // For password hashing
-const jwt = require('jsonwebtoken'); // You'll need to install this package
+const jwt = require('jsonwebtoken'); 
 
 
 exports.createUser = async (req, res) => {
@@ -62,7 +62,7 @@ exports.loginUser = async (req, res) => {
     const token = jwt.sign(
       { userId: user._id, username: user.username },
       process.env.JWT_SECRET,
-      { expiresIn: '1h' }
+      { expiresIn: '1d' }
     );
 
     res.status(200).json({
