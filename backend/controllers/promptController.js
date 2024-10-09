@@ -1,9 +1,9 @@
-const Prompt = require('../models/Prompt');
+const Prompt = require('../models/prompt');
 
 // Get all prompts
 exports.getAllPrompts = async (req, res) => {
   try {
-    const prompts = await Prompt.find();
+    const prompts = await Prompt.find().populate('author', 'username');;
     res.status(200).json(prompts);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -13,7 +13,7 @@ exports.getAllPrompts = async (req, res) => {
 // Get a prompt by ID
 exports.getPromptById = async (req, res) => {
   try {
-    const prompt = await Prompt.findOne({ _id: req.params.id });
+    const prompt = await Prompt.findOne({ _id: req.params.id }).populate('author', 'username');
     if (!prompt) {
       return res.status(404).json({ message: 'Prompt not found' });
     }

@@ -11,7 +11,7 @@ const CreatePrompt = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [error, setError] = useState(null);
-  const { userId, username } = getUserInfo(); 
+  const { userId } = getUserInfo(); 
   const navigate = useNavigate();
   
   const handleAddTag = (e) => {

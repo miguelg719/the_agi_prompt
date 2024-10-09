@@ -20,9 +20,9 @@ const PromptCard = ({ _id, title, upvotes, comments, author, downvotes, tags }) 
                 </span>
             </div>
         </div>
-        <div className="flex items-center text-gray-400 mb-3 hover:text-gray-200">
+        <div className="flex items-center text-gray-400 mb-3">
             <User size={16} className="mr-2" />
-            <span className="mr-4">{author}</span>
+            <span className="mr-4">{author.username}</span>
         </div>
         <div className="flex items-center justify-between w-full">
             <div className="flex flex-wrap items-center flex-grow basis-6/7 overflow-hidden" style={{ maxHeight: '1.75rem' }}>

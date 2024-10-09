@@ -150,7 +150,7 @@ const PromptView = () => {
 
       {/* Metadata */}
       <div className="mb-6 flex flex-wrap items-center text-sm text-gray-600">
-        <span className="flex items-center mr-4"><User size={16} className="mr-1" /> {prompt.author}</span>
+        <span className="flex items-center mr-4"><User size={16} className="mr-1" /> {prompt.author.username}</span>
         <span className="flex items-center mr-4"><Clock size={16} className="mr-1" /> Last edited: {new Date(prompt.createdAt).toLocaleDateString()}</span>
         <span className="flex items-center"><Tag size={16} className="mr-1" /> {prompt.tags.join(', ')}</span>
         <div className="flex items-end ml-auto mr-2">

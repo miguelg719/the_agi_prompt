@@ -20,11 +20,11 @@ const promptSchema = new mongoose.Schema({
   },
   comments: [{
     type: Schema.Types.ObjectId,
-    ref: 'Comment'  // Reference to the Comment model
+    ref: 'Comment'  
   }],
   author: {
     type: Schema.Types.ObjectId,
-    ref: 'Author',
+    ref: 'User',
     required: true
   },
   createdAt: {
