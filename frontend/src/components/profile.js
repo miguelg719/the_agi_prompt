@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { User, Mail, Calendar, Edit2, Save, LogOut, Trash2 } from 'lucide-react';
+import { User, Mail, Calendar, Edit2, Save, LogOut, Trash2, Loader2 } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { getUserInfo } from '../utils/auth';
+import { deletePrompt } from '../services/api';
 
 const ProfilePage = () => {
   const [userData, setUserData] = useState({
@@ -12,21 +13,36 @@ const ProfilePage = () => {
     email: '',
     createdAt: '',
   });
-  const { userId } = getUserInfo(); 
+  const [ userInfo, setUserInfo ] = useState(null);
   const [ userPrompts, setUserPrompts ] = useState([]);
-  const [ isEditing, setIsEditing ] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [ isLoading, setIsLoading ] = useState(true);
+  const [ error, setError ] = useState('');
+  const [ success, setSuccess ] = useState('');
   const { logout } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchUserData();
-  }, []);
+    const fetchData = async () => {
+      setIsLoading(true);
+      const info = getUserInfo();
+      setUserInfo(info);
+      if (info && info.userId) {
+        try {
+          await fetchUserData();
+          await fetchUserPrompts(info.userId);
+        } catch (error) {
+          setError('Failed to load user data');
+        }
+      } else {
+        // Redirect to login if no user info is available
+        navigate('/login');
+      }
+      setIsLoading(false);
+    };
 
-  useEffect(() => {
-    fetchUserPrompts(userId);
-  }, [userId]);
+    fetchData();
+  }, [navigate]);
 
   const fetchUserData = async () => {
     try {
@@ -49,6 +65,16 @@ const ProfilePage = () => {
     }
   };
 
+  const handleDeletePrompt = async (promptId) => {
+    try {
+      await deletePrompt(promptId);
+      setUserPrompts(userPrompts.filter(prompt => prompt._id !== promptId));
+      setSuccess('Prompt deleted successfully');
+    } catch (error) {
+      setError('Failed to delete prompt');
+    }
+  };
+
   const handleChange = (e) => {
     setUserData({
       ...userData,
@@ -62,6 +88,7 @@ const ProfilePage = () => {
     setSuccess('');
 
     try {
+      // TODO: refactor 
       const token = localStorage.getItem('token');
       await axios.put('http://localhost:3000/api/users/profile', userData, {
         headers: { Authorization: `Bearer ${token}` }
@@ -79,6 +106,22 @@ const ProfilePage = () => {
       navigate('/login');
     }, 1000);
   };
+
+  if (isLoading) {
+    return (
+      <div className="bg-gray-900 min-h-screen flex items-center justify-center">
+        <Loader2 className="h-12 w-12 text-blue-500 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!userInfo) {
+    return (
+      <div className="bg-gray-900 min-h-screen flex items-center justify-center">
+        <p className="text-white text-xl">No user information available. Please log in.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gray-900 min-h-screen flex flex-col items-center px-4 sm:px-6 md:px-24 py-8 md:py-14">
@@ -199,7 +242,10 @@ const ProfilePage = () => {
                 <button className="bg-blue-500 hover:bg-blue-600 text-white p-1.5 rounded-md transition-colors duration-300">
                   <Edit2 size={16} />
                 </button>
-                <button className="bg-red-500 hover:bg-red-600 text-white p-1.5 rounded-md transition-colors duration-300">
+                <button
+                  className="bg-red-500 hover:bg-red-600 text-white p-1.5 rounded-md transition-colors duration-300"
+                  onClick={() => handleDeletePrompt(prompt._id)}
+                >
                   <Trash2 size={16} />
                 </button>
               </div>
