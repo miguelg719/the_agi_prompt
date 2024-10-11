@@ -185,7 +185,7 @@ const ProfilePage = () => {
         </div>
       </main>
 
-      <section className="w-full max-w-xl mt-8">
+      <section className="w-full max-w-3xl mt-8">
         <h2 className="text-lg md:text-xl font-bold text-white mb-4 text-center">Your Prompts</h2>
         <div className="space-y-3">
           {userPrompts.map((prompt) => (
