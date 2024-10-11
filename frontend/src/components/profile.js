@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { User, Mail, Calendar, Edit2, Save, LogOut } from 'lucide-react';
+import { User, Mail, Calendar, Edit2, Save, LogOut, Trash2 } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { getUserInfo } from '../utils/auth';
 
 
 const ProfilePage = () => {
@@ -11,7 +13,9 @@ const ProfilePage = () => {
     email: '',
     createdAt: '',
   });
-  const [isEditing, setIsEditing] = useState(false);
+  const { userId } = getUserInfo(); 
+  const [ userPrompts, setUserPrompts ] = useState([]);
+  const [ isEditing, setIsEditing ] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const { logout } = useAuth();
@@ -22,6 +26,10 @@ const ProfilePage = () => {
     fetchUserData();
   }, []);
 
+  useEffect(() => {
+    fetchUserPrompts(userId);
+  }, [userId]);
+
   const fetchUserData = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -31,6 +39,15 @@ const ProfilePage = () => {
       setUserData(response.data);
     } catch (error) {
       setError('Failed to fetch user data');
+    }
+  };
+
+  const fetchUserPrompts = async (userId) => {
+    try {
+      const response = await axios.get(`http://localhost:3000/api/prompts/user/${userId}`);
+      setUserPrompts(response.data);
+    } catch (error) {
+      setError('Failed to fetch user prompts');
     }
   };
 
@@ -59,7 +76,6 @@ const ProfilePage = () => {
   };
 
   const handleLogout = () => {
-    console.log('here');
     logout();
     setTimeout(() => {
       navigate('/login');
@@ -140,7 +156,7 @@ const ProfilePage = () => {
             </div>
             {isEditing ? (
               <button
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-4"
+                className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-4"
                 type="submit"
               >
                 <Save className="inline mr-2" size={18} />
@@ -148,7 +164,7 @@ const ProfilePage = () => {
               </button>
             ) : (
               <button
-                className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-4"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-4"
                 type="button"
                 onClick={() => setIsEditing(true)}
               >
@@ -166,6 +182,31 @@ const ProfilePage = () => {
           </button>
         </div>
       </main>
+      <h2 className="text-xl font-bold text-white mb-4 mt-10">Your Prompts</h2>
+        <div className="space-y-4 w-4/5">
+          {userPrompts.map((prompt) => (
+            <div key={prompt._id} className="bg-gray-700 p-4 rounded-lg shadow flex justify-between items-center">
+              <div className="flex-grow">
+                <Link to={`/prompt/${prompt._id}`} className="text-lg font-semibold text-white hover:text-blue-400">
+                  {prompt.title}
+                </Link>
+              </div>
+              <button
+                className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-md transition-colors duration-300 mr-4"
+              >
+                <Edit2 size={18} />
+              </button>
+              <button
+                className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-md transition-colors duration-300 "
+              >
+                <Trash2 size={18} />
+              </button>
+            </div>
+          ))}
+          {userPrompts.length === 0 && (
+            <p className="text-gray-400 text-center">You haven't created any prompts yet.</p>
+          )}
+        </div>
     </div>
   );
 };

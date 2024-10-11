@@ -9,8 +9,8 @@ const Footer = () => (
                 <div className="w-full">
                     <h4 className="text-xl text-white font-semibold mb-6">Social</h4>
                     <div className="flex space-x-7 justify-center">
-                        <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition duration-300"><FontAwesomeIcon icon={faDiscord} size="lg" /></a>
-                        <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition duration-300"><FontAwesomeIcon icon={faGithub} size="lg" /></a>
+                        <a href="https://discord.gg/qZD4y4VEpU" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition duration-300"><FontAwesomeIcon icon={faDiscord} size="lg" /></a>
+                        <a href="https://github.com/miguelg719/the_agi_prompt" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition duration-300"><FontAwesomeIcon icon={faGithub} size="lg" /></a>
                     </div>
                 </div>
             </div>

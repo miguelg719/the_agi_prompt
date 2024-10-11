@@ -5,6 +5,8 @@ const promptController = require('../controllers/promptController');
 // Route to get all prompts
 router.get('/', promptController.getAllPrompts);
 
+router.get('/user/:id', promptController.getAllPromptsByUser);
+
 // Route to get a specific prompt by ID
 router.get('/:id', promptController.getPromptById);
 

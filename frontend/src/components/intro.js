@@ -87,9 +87,11 @@ const Intro = () => {
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-bold mb-6">Join the community</h2>
           <p className="text-xl mb-8">Be part of shaping the future of AI</p>
-          <button className="bg-blue-600 text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-blue-700 transition duration-300">
-            Sign Up Now
-          </button>
+          <Link to='/login'>
+            <button className="bg-blue-600 text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-blue-700 transition duration-300">
+              Sign Up Now
+            </button>
+          </Link>
         </div>
       </section>
     </div>

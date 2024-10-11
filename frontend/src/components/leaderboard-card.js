@@ -17,11 +17,10 @@ const LeaderboardCard = ({ index, title, upvotes, downvotes }) => (
                 <span className="text-green-400 transition-colors duration-300 mr-2">
                     <ThumbsUp size={17} />
                 </span>
-                <span className="text-md font-bold my-1 mr-1">{upvotes}</span>
+                <span className="text-md font-bold my-1">{upvotes-downvotes}</span>
                 <span className="text-red-400 transition-colors duration-300 ml-2 mr-2">
                     <ThumbsDown size={17} />
                 </span>
-                <span className="text-md font-bold my-1 mr-4">{downvotes}</span>
             </div>
         </div>
     </div>

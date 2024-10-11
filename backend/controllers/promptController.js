@@ -3,7 +3,16 @@ const Prompt = require('../models/prompt');
 // Get all prompts
 exports.getAllPrompts = async (req, res) => {
   try {
-    const prompts = await Prompt.find().populate('author', 'username');;
+    const prompts = await Prompt.find().populate('author', 'username');
+    res.status(200).json(prompts);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getAllPromptsByUser = async (req, res) => {
+  try {
+    const prompts = await Prompt.find({ author: req.params.id });
     res.status(200).json(prompts);
   } catch (error) {
     res.status(500).json({ error: error.message });
