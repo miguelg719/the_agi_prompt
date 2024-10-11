@@ -21,22 +21,32 @@ export const getUserProfile = async (token) => {
 };
 
 export const fetchPromptById = async (id) => {
-    try {
-      const response = await axios.get(`${API_URL}/prompts/${id}`);
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching prompt by id:', error);
-      throw error;
-    }
-  };
+  try {
+    const response = await axios.get(`${API_URL}/prompts/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching prompt by id:', error);
+    throw error;
+  }
+};
 
 export const createPrompt = async (promptData) => {
-		try {
-				console.log(promptData);
-				const response = await axios.post(`${API_URL}/prompts`, promptData);
-				return response.data;
-		} catch (error) {
-				console.error('Error creating prompt:', error);
-				throw error;
-		}
-	};
+  try {
+      console.log(promptData);
+      const response = await axios.post(`${API_URL}/prompts`, promptData);
+      return response.data;
+  } catch (error) {
+      console.error('Error creating prompt:', error);
+      throw error;
+  }
+};
+
+export const deletePrompt = async (id) => {
+  try {
+      const response = await axios.delete(`${API_URL}/prompts/${id}`);
+      return response.data;
+  } catch (error) {
+      console.error('Error deleting prompt:', error);
+      throw error;
+  }
+};

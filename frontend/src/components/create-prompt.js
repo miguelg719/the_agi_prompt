@@ -15,9 +15,14 @@ const CreatePrompt = () => {
   const navigate = useNavigate();
   
   const handleAddTag = (e) => {
-    if (e.key === 'Enter' && e.target.value) {
+    if (e.key === 'Enter' && e.target.value && tags.length < 5) {
       setTags([...tags, e.target.value]);
+      e.preventDefault();
       e.target.value = '';
+    } else if (e.key === 'Enter' && tags.length >= 5) {
+      e.preventDefault();
+      setError('Maximum of 5 tags allowed');
+      setTimeout(() => setError(null), 3000);
     }
   };
 

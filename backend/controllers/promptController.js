@@ -70,7 +70,7 @@ exports.updatePrompt = async (req, res) => {
 // Delete a prompt by ID
 exports.deletePrompt = async (req, res) => {
   try {
-    const deletedPrompt = await Prompt.findOneAndDelete({ id: req.params.id });
+    const deletedPrompt = await Prompt.findOneAndDelete({ _id: req.params.id });
     if (!deletedPrompt) {
       return res.status(404).json({ message: 'Prompt not found' });
     }
