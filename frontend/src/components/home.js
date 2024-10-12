@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, ChevronDown, Plus, Tag} from 'lucide-react';
+import { Search, ChevronDown, Plus, Tag } from 'lucide-react';
 import PromptCard from './prompt-card';
 import FeaturedCard from './featured-card';
 import { useAuth } from '../context/AuthContext';
@@ -15,12 +15,10 @@ const Home = () => {
       const response = await fetch('http://localhost:3000/api/prompts');
       const data = await response.json();
       setPrompts(data);
-      console.log(data);
     };
     fetchPrompts();
   }, []);
 
-  // Sample data for demonstration
   const samplePrompts = [
     {
       id: 1,
@@ -40,66 +38,14 @@ const Home = () => {
       createdAt: "2024-07-14T15:45:00Z",
       tags: ["Explainable AI", "Natural Language", "Reasoning"]
     },
-    {
-      id: 3,
-      prompt: "Design an AGI framework that can seamlessly integrate and utilize multiple specialized AI models",
-      votes: 82,
-      comments: 27,
-      author: "AIArchitect",
-      createdAt: "2024-07-13T09:15:00Z",
-      tags: ["Framework", "Integration", "Specialized AI"]
-    },
-    {
-        id: 4,
-        prompt: "Claude June 2024",
-        votes: 52,
-        comments: 7,
-        author: "Anthropic",
-        createdAt: "2024-07-13T09:15:00Z",
-        tags: ["LLM", "Integration", "General AI"]
-    },
-    {
-        id: 5,
-        prompt: "Gemini Cracked Woke Prompt",
-        votes: 21,
-        comments: 100,
-        author: "LLM Hacks",
-        createdAt: "2024-07-13T09:15:00Z",
-        tags: ["LLM", "Integration", "General AI"]
-    },
-    {
-      id: 6,
-      prompt: "Design an AGI framework that can seamlessly integrate and utilize multiple specialized AI models",
-      votes: 82,
-      comments: 27,
-      author: "AIArchitect",
-      createdAt: "2024-07-13T09:15:00Z",
-      tags: ["Framework", "Integration", "Specialized AI"]
-    },
-    {
-        id: 7,
-        prompt: "Claude June 2024",
-        votes: 52,
-        comments: 7,
-        author: "Anthropic",
-        createdAt: "2024-07-13T09:15:00Z",
-        tags: ["LLM", "Integration", "General AI"]
-    },
-    {
-        id: 8,
-        prompt: "Gemini Cracked Woke Prompt",
-        votes: 21,
-        comments: 100,
-        author: "LLM Hacks",
-        createdAt: "2024-07-13T09:15:00Z",
-        tags: ["LLM", "Integration", "General AI"]
-    }
+    // ...other prompts
   ];
 
   return (
     <div className="min-h-screen bg-gray-900 text-white mt-7">
-      <main className="container mx-auto px-4">
-        <div className="flex mb-6">
+      <main className="container mx-auto px-4 sm:px-6 md:px-8 overflow-x-hidden">
+        {/* Search Bar */}
+        <div className="flex mb-4 sm:mb-6">
           <div className="flex-grow">
             <div className="relative">
               <input
@@ -112,7 +58,8 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="flex mb-6 space-x-4 justify-between">
+        {/* Sort and Filter Section */}
+        <div className="flex flex-col sm:flex-row sm:justify-between mb-4 sm:mb-6 space-y-4 sm:space-y-0 sm:space-x-4">
           <div className="flex space-x-4">
             <button
               className="flex items-center py-2 px-5 rounded-full transition-colors duration-300 bg-gray-600 text-white hover:bg-blue-500"
@@ -120,19 +67,19 @@ const Home = () => {
               Sort
               <ChevronDown className="ml-2" />
             </button>
-            <div className="flex items-center bg-gray-600 text-white border border-gray-700 rounded-full py-2 px-4 focus:outline-none focus:border-blue-500">
-              <Tag size={15} className='mr-2'></Tag>
+            <div className="flex items-center bg-gray-600 text-white border border-gray-700 rounded-full py-2 px-1">
+              <Tag size={15} className='mr-2' />
               <input
                 type="text"
                 placeholder="Filter"
-                className="bg-gray-600 text-white text-bold border-none focus:outline-none"
+                className="bg-gray-600 text-white border-none focus:outline-none"
               />
             </div>
           </div>
-          {isAuthenticated && ( // Conditionally render the New Prompt button
+          {isAuthenticated && (
             <Link to={'/prompt'}>
               <button
-                className="flex items-center py-2 px-5 rounded-full transition-colors duration-300 bg-blue-600 text-white hover:bg-blue-500 ml-auto"
+                className="flex items-center py-2 px-5 rounded-full transition-colors duration-300 bg-blue-600 text-white hover:bg-blue-500"
               >
                 New Prompt
                 <Plus className="ml-2" />
@@ -141,29 +88,33 @@ const Home = () => {
           )}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main Grid: Prompts and Featured Prompts */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+          {/* Prompts Column */}
           <div className="lg:col-span-2">
-              <div className="max-h-screen overflow-y-auto scrollbar-hidden">
-                {prompts.map((prompt) => (
-                  <PromptCard key={prompt.id} {...prompt} />
+            <div className="max-h-screen overflow-y-auto">
+              {prompts.map((prompt) => (
+                <PromptCard key={prompt.id} {...prompt} />
+              ))}
+            </div>
+          </div>
+
+          {/* Featured Prompts */}
+          <div className="lg:col-span-1 w-full">
+            <div className="bg-gray-800 p-4 rounded-lg shadow-md">
+              <h2 className="text-xl font-semibold mb-4 underline underline-offset-8">Featured Prompts</h2>
+              <div className='divide-y divide-gray-600'>
+                {samplePrompts.slice(0, 5).map((prompt, index) => (
+                  <FeaturedCard
+                    key={prompt.id}
+                    rank={index + 1}
+                    prompt={prompt.prompt}
+                    score={prompt.votes}
+                  />
                 ))}
               </div>
             </div>
-            <div className="mb-7 lg:block hidden">
-                <div className="bg-gray-800 p-4 rounded-lg shadow-md">
-                    <h2 className="text-xl font-semibold mb-4 text-white-500 underline underline-offset-8">Featured Prompts</h2>
-                    <div className='divide-y divide-gray-600'>  
-                        {samplePrompts.slice(0,5).map((prompt, index) => (
-                            <FeaturedCard
-                            key={prompt.id}
-                            rank={index + 1}
-                            prompt={prompt.prompt}
-                            score={prompt.votes}
-                            />
-                        ))}
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
       </main>
     </div>
