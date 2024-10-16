@@ -1,17 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { ThumbsUp, ThumbsDown, MessageSquare, Tag, Clock, User, Paperclip, Plus, Minus, Link as LinkIcon } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, MessageSquare, Tag, Clock, ChevronDown, ChevronUp, User, Paperclip, Plus, Minus, Link as LinkIcon } from 'lucide-react';
 import { fetchPromptById } from '../services/api';
 import { useParams } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const PromptView = () => {
   const { id } = useParams();
+  const { isAuthenticated } = useAuth();
+
   const [prompt, setPrompt] = useState(null);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [votes, setVotes] = useState(0);
-  const [showInput, setShowInput] = useState(true);
+  const [showInput, setShowInput] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [expandedComments, setExpandedComments] = useState({});
+
+  const toggleCommentExpansion = (index) => {
+    setExpandedComments(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
 
   const renderPromptWithLineBreaks = (text) => {
     return text.split('\n').map((line, index) => (
@@ -47,9 +58,21 @@ const PromptView = () => {
 
   const handleAddComment = () => {
     if (newComment.trim()) {
-      setComments([...comments, newComment]);
+      const newCommentObj = {
+        text: newComment,
+        author: { username: 'Current User' }, // Replace with actual user data
+        votes: 0,
+        createdAt: new Date().toISOString(),
+      };
+      setComments([...comments, newCommentObj]);
       setNewComment('');
     }
+  };
+
+  const handleCommentVote = (index, value) => {
+    const updatedComments = [...comments];
+    updatedComments[index].votes += value;
+    setComments(updatedComments);
   };
 
   const handleVote = (value) => {
@@ -171,13 +194,13 @@ const PromptView = () => {
       <div className='flex items-center'>
           <h3 className="text-lg font-semibold mb-2 flex items-center">
             <MessageSquare size={20} className="mr-2" /> Comments
-            <button
-              onClick={toggleInput}
-              className="ml-2 text-blue-800 hover:text-blue-900"
-              aria-label={showInput ? 'Hide input' : 'Show input'}
-            >
-              {showInput ? <Plus size={15} /> : <Minus size={15} />}
-            </button>
+          {isAuthenticated && (<button
+            onClick={toggleInput}
+            className="ml-2 text-blue-800 hover:text-blue-900"
+            aria-label={showInput ? 'Hide input' : 'Show input'}
+          >
+            {showInput ? <Minus size={15} /> : <Plus size={15} />}
+          </button>)}
           </h3>
         </div>
         {showInput && (
@@ -199,8 +222,47 @@ const PromptView = () => {
         )}
         <div className="mb-4">
           {comments.map((comment, index) => (
-            <div key={index} className="bg-gray-100 p-2 rounded mb-2">
-              {comment}
+            <div key={index} className="bg-white p-4 rounded-lg shadow mb-4">
+              <div className="flex items-start justify-between">
+                <div className="flex-grow mr-4 relative">
+                  <p className={`text-gray-800 mb-4 text-left pr-5 pl-2 ${expandedComments[index] ? '' : 'line-clamp-3'}`}>
+                    {comment.text}
+                  </p>
+                  {comment.text.split('\n').length > 0 && (
+                    <button
+                      onClick={() => toggleCommentExpansion(index)}
+                      className="text-blue-500 hover:text-blue-700 text-sm flex mt-2 items-center absolute bottom-0 right-0"
+                    >
+                      {expandedComments[index] ? (
+                        <>
+                        less <ChevronUp size={14} className="ml-1" /> 
+                        </>
+                      ) : (
+                        <>
+                        more <ChevronDown size={14} className="ml-1" /> 
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
+                <div className="flex items-center pr-1">
+                  <button onClick={() => handleCommentVote(index, 1)} className="mr-1">
+                    <ThumbsUp size={14} className="text-green-500" />
+                  </button>
+                  <span className="font-bold mx-1">{comment.votes}</span>
+                  <button onClick={() => handleCommentVote(index, -1)} className="ml-1">
+                    <ThumbsDown size={14} className="text-red-500" />
+                  </button>
+                </div>
+              </div>
+              <div className="flex items-center justify-between px-1 text-sm text-gray-600">
+                <span className="flex items-center">
+                  <User size={14} className="mr-1" /> {comment.author.username}
+                </span>
+                <span className="flex items-center">
+                  <Clock size={14} className="mr-1" /> {new Date(comment.createdAt).toLocaleDateString()}
+                </span>
+              </div>
             </div>
           ))}
         </div>
