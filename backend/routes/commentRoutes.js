@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const commentController = require('../controllers/commentController');
 
-// Route to get all prompts
-router.get('/prompt/:id', commentController.getAllCommentsByPrompt);
+// Route to get a comment by Id
+router.get('/', commentController.getCommentsByIdList);
 
 // Route to create a new prompt
 router.post('/', commentController.postComment);
