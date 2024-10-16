@@ -53,15 +53,19 @@ exports.createPrompt = async (req, res) => {
 // Update a prompt by ID
 exports.updatePrompt = async (req, res) => {
   try {
+    // Assuming req.body.comment contains the new comment value you want to append
+    const commentToAdd = req.body.comment;
     const updatedPrompt = await Prompt.findOneAndUpdate(
-      { id: req.params.id },
-      req.body,
-      { new: true }
+      { _id: req.params.id },  // Correct _id lookup
+      { $push: { comments: commentToAdd } },  // Use $push to append to the comments array
+      { new: true }  // Return the updated document
     );
+
     if (!updatedPrompt) {
       return res.status(404).json({ message: 'Prompt not found' });
     }
-    res.status(200).json(updatedPrompt);
+
+    res.status(200).json(updatedPrompt);  // Return the updated prompt
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
