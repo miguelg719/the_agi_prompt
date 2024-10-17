@@ -15,7 +15,6 @@ const Home = () => {
       const response = await fetch('http://localhost:3000/api/prompts');
       const data = await response.json();
       setPrompts(data);
-      console.log(data);
     };
     fetchPrompts();
   }, []);

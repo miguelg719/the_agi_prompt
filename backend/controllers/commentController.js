@@ -31,3 +31,19 @@ exports.postComment = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.updateComment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { body } = req.body;
+
+    const updatedComment = await Comment.findByIdAndUpdate(id, { body }, { new: true });
+    if (!updatedComment) {
+      return res.status(404).json({ error: 'Comment not found' });
+    }
+
+    res.status(200).json(updatedComment);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

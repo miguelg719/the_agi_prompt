@@ -22,13 +22,27 @@ exports.getAllPromptsByUser = async (req, res) => {
 // Get a prompt by ID
 exports.getPromptById = async (req, res) => {
   try {
-    const prompt = await Prompt.findOne({ _id: req.params.id }).populate('author', 'username');
+    const { id } = req.params;
+    const userId = req.user ? req.user._id : null;
+
+    const prompt = await Prompt.findById(id)
+      .populate('author', 'username')
+
     if (!prompt) {
       return res.status(404).json({ message: 'Prompt not found' });
     }
-    res.status(200).json(prompt);
+
+    const promptObj = prompt.toObject();
+
+    if (userId) {
+      const userVote = prompt.userVotes.find(v => v.user.toString() === userId.toString());
+      promptObj.userVote = userVote ? userVote.vote : 0;
+    }
+
+    res.json(promptObj);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error fetching prompt:', error);
+    res.status(500).json({ message: 'Error fetching prompt', error: error.message });
   }
 };
 
@@ -53,21 +67,50 @@ exports.createPrompt = async (req, res) => {
 // Update a prompt by ID
 exports.updatePrompt = async (req, res) => {
   try {
-    // Assuming req.body.comment contains the new comment value you want to append
-    const commentToAdd = req.body.comment;
-    const updatedPrompt = await Prompt.findOneAndUpdate(
-      { _id: req.params.id },  // Correct _id lookup
-      { $push: { comments: commentToAdd } },  // Use $push to append to the comments array
-      { new: true }  // Return the updated document
-    );
+    const { id } = req.params;
+    const { vote, userId, ...updateData } = req.body;
 
-    if (!updatedPrompt) {
-      return res.status(404).json({ message: 'Prompt not found' });
+    if (vote !== undefined && userId) {
+      const prompt = await Prompt.findById(id);
+      if (!prompt) {
+        return res.status(404).json({ message: 'Prompt not found' });
+      }
+
+      const existingVoteIndex = prompt.userVotes.findIndex(v => v.user.toString() === userId);
+      const oldVote = existingVoteIndex !== -1 ? prompt.userVotes[existingVoteIndex].vote : 0;
+
+      if (existingVoteIndex !== -1) {
+        prompt.userVotes[existingVoteIndex].vote = vote;
+      } else {
+        prompt.userVotes.push({ user: userId, vote });
+      }
+
+      // Update upvotes and downvotes
+      if (oldVote === 1) prompt.upvotes--;
+      if (oldVote === -1) prompt.downvotes--;
+      if (vote === 1) prompt.upvotes++;
+      if (vote === -1) prompt.downvotes++;
+
+      await prompt.save();
+
+      const updatedPrompt = await Prompt.findByIdAndUpdate(id, updateData, { new: true })
+        .populate('author', 'username')
+        .populate('comments');
+
+      // Add userVote to the response
+      const responsePrompt = updatedPrompt.toObject();
+      responsePrompt.userVote = vote;
+
+      return res.json(responsePrompt);
+    } else {
+      const updatedPrompt = await Prompt.findByIdAndUpdate(id, updateData, { new: true })
+        .populate('author', 'username')
+        .populate('comments');
+      return res.json(updatedPrompt);
     }
-
-    res.status(200).json(updatedPrompt);  // Return the updated prompt
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error updating prompt:', error);
+    res.status(500).json({ message: 'Error updating prompt', error: error.message });
   }
 };
 
