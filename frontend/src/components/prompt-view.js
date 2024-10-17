@@ -199,7 +199,7 @@ const PromptView = () => {
     return (
       <button 
         onClick={() => handleCommentVote(commentId, voteType)} 
-        className={`flex items-center p-1 rounded hover:bg-gray-200 ${isSelected ? 'bg-gray-200' : ''}`}
+        className={`flex items-center p-1 rounded hover:bg-gray-200`}
       >
         <Icon 
           size={16} 

@@ -35,15 +35,46 @@ exports.postComment = async (req, res) => {
 exports.updateComment = async (req, res) => {
   try {
     const { id } = req.params;
-    const { body } = req.body;
+    const { vote, userId, ...updateData } = req.body;
 
-    const updatedComment = await Comment.findByIdAndUpdate(id, { body }, { new: true });
-    if (!updatedComment) {
-      return res.status(404).json({ error: 'Comment not found' });
+    if (vote !== undefined && userId) {
+      const comment = await Comment.findById(id);
+      if (!comment) {
+        return res.status(404).json({ error: 'Comment not found' });
+      }
+
+      const existingVoteIndex = comment.userVotes.findIndex(v => v.user.toString() === userId);
+      const oldVote = existingVoteIndex !== -1 ? comment.userVotes[existingVoteIndex].vote : 0;
+
+      if (existingVoteIndex !== -1) {
+        comment.userVotes[existingVoteIndex].vote = vote;
+      } else {
+        comment.userVotes.push({ user: userId, vote });
+      }
+
+      // Update upvotes and downvotes
+      if (oldVote === 1) comment.upvotes--;
+      if (oldVote === -1) comment.downvotes--;
+      if (vote === 1) comment.upvotes++;
+      if (vote === -1) comment.downvotes++;
+
+      await comment.save();
+
+      const updatedComment = await Comment.findByIdAndUpdate(id, updateData, { new: true })
+        .populate('user', 'username');
+
+      // Add userVote to the response
+      const responseComment = updatedComment.toObject();
+      responseComment.userVote = vote;
+
+      return res.json(responseComment);
+    } else {
+      const updatedComment = await Comment.findByIdAndUpdate(id, updateData, { new: true })
+        .populate('user', 'username');
+      return res.json(updatedComment);
     }
-
-    res.status(200).json(updatedComment);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error updating comment:', error);
+    res.status(500).json({ error: 'Error updating comment', details: error.message });
   }
 };
