@@ -1,6 +1,5 @@
 import React from 'react';
 import { ThumbsUp, ThumbsDown } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 const LeaderboardCard = ({ index, title, upvotes, downvotes }) => (
     <div className="bg-gray-800 p-4 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300 mb-6">
@@ -9,9 +8,7 @@ const LeaderboardCard = ({ index, title, upvotes, downvotes }) => (
             #{index+1}
         </span>
         <h3 className="md:text-xl font-semibold text-white flex-grow">
-          <Link to={"/prompt_test"} className="hover:text-blue-400">
             {title}
-          </Link>
         </h3>
             <div className="flex justify-between items-center ml-4">
                 <span className="text-green-400 transition-colors duration-300 mr-2">

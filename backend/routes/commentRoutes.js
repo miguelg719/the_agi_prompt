@@ -9,7 +9,7 @@ router.get('/', commentController.getCommentsByIdList);
 router.post('/', commentController.postComment);
 
 // Route to update a specific comment
-// router.put('/:id', commentController.updatePrompt);
+router.put('/:id', commentController.updateComment);
 
 // Route to delete a specific comment
 // router.delete('/:id', commentController.deletePrompt);

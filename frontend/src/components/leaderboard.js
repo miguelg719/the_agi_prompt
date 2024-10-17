@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, ChevronDown, Tag } from 'lucide-react';
 import LeaderboardCard from './leaderboard-card';
+import { Link } from 'react-router-dom';
 
 const PromptLeaderboard = () => {
   const [prompts, setPrompts] = useState([]);
@@ -165,7 +166,9 @@ const PromptLeaderboard = () => {
         <div className="">
           <div className="">
             {filteredPrompts.map((prompt, index) => (
-              <LeaderboardCard key={prompt.id} index={index} {...prompt} />
+              <Link to={`/prompt/${prompt._id}`} key={prompt._id}>
+                <LeaderboardCard index={index} {...prompt} />
+              </Link>
             ))}
           </div>
         </div>

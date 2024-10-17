@@ -42,11 +42,13 @@ export const createPrompt = async (promptData) => {
 
 export const updatePrompt = async (id, promptData) => {
   try {
-      const response = await axios.put(`${API_URL}/prompts/${id}`, promptData);
-      return response.data;
+    const response = await axios.put(`${API_URL}/prompts/${id}`, promptData, {
+      headers: { ...getAuthHeader() }
+    });
+    return response.data;
   } catch (error) {
-      console.error('Error creating prompt:', error);
-      throw error;
+    console.error('Error updating prompt:', error);
+    throw error;
   }
 };
 
@@ -62,7 +64,6 @@ export const deletePrompt = async (id) => {
 
 export const fetchComments = async (commentList) => {
   try {
-    console.log(commentList);
     const queryString = commentList.map(id => `ids[]=${id}`).join('&');
     const response = await axios.get(`${API_URL}/comments/?${queryString}`);
     return response.data;
@@ -83,3 +84,15 @@ export const createComment = async (promptId, userId, body) => {
     throw new Error('Failed to create comment');
   }
 };
+
+export const updateComment = async (id, commentData) => {
+  try {
+    const response = await axios.put(`${API_URL}/comments/${id}`, commentData, {
+      headers: { ...getAuthHeader() }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error updating prompt:', error);
+    throw error;
+  }
+  };

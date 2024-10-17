@@ -3,6 +3,8 @@ import { PlusIcon, Loader2 } from 'lucide-react';
 import { createPrompt } from '../services/api'; 
 import { getUserInfo } from '../utils/auth';
 import { useNavigate } from 'react-router-dom';
+import ErrorOverlay from './error-overlay';
+
 
 const CreatePrompt = () => {
   const [title, setTitle] = useState('');
@@ -14,6 +16,14 @@ const CreatePrompt = () => {
   const { userId } = getUserInfo(); 
   const navigate = useNavigate();
   
+  const handleError = (errorMessage) => {
+    setError(errorMessage);
+  };
+
+  const clearError = () => {
+    setError(null);
+  };
+
   const handleAddTag = (e) => {
     if (e.key === 'Enter' && e.target.value && tags.length < 5) {
       setTags([...tags, e.target.value]);
@@ -21,7 +31,7 @@ const CreatePrompt = () => {
       e.target.value = '';
     } else if (e.key === 'Enter' && tags.length >= 5) {
       e.preventDefault();
-      setError('Maximum of 5 tags allowed');
+      handleError('Maximum of 5 tags allowed');
       setTimeout(() => setError(null), 3000);
     }
   };
@@ -33,7 +43,7 @@ const CreatePrompt = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError(null);
+    clearError();
 
     try {
       const newPrompt = {
@@ -55,7 +65,7 @@ const CreatePrompt = () => {
       }, 2000);
       
     } catch (err) {
-      setError('Failed to create prompt. Please try again.');
+      handleError('Failed to create prompt. Please try again.');
       console.error('Error creating prompt:', err);
     } finally {
       setIsSubmitting(false);
@@ -67,8 +77,9 @@ const CreatePrompt = () => {
       <main className="container mx-auto mt-2 p-8">
         <h1 className="text-2xl font-bold mb-6 text-white">Create New Prompt</h1>
         
+        {error && <ErrorOverlay message={error} onClose={clearError} />}
+        
         <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-6 bg-gray-200 shadow-lg rounded-lg mt-4 mb-10 text-left">
-          {error && <div className="text-red-500 mb-4">{error}</div>}
           <div className="mb-6">
             <label htmlFor="title" className="block mb-2 ml-3 text-xl font-semibold">Title</label>
             <input

@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ThumbsUp, ThumbsDown, MessageSquare, Tag, Clock, ChevronDown, ChevronUp, User, Paperclip, Plus, Minus, Link as LinkIcon } from 'lucide-react';
-import { fetchPromptById, fetchComments, createComment, updatePrompt } from '../services/api';
+import { ThumbsUp, ThumbsDown, MessageSquare, Tag, Clock, ChevronDown, ChevronUp, User, Paperclip, Plus, Minus, Link as LinkIcon, Loader } from 'lucide-react';
+import { fetchPromptById, fetchComments, createComment, updatePrompt, updateComment } from '../services/api';
 import { getUserInfo } from '../utils/auth';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import ErrorOverlay from './error-overlay';
 
 const PromptView = () => {
   const { id } = useParams();
@@ -12,14 +13,16 @@ const PromptView = () => {
   const [prompt, setPrompt] = useState(null);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
-  const [votes, setVotes] = useState(0);
   const [showInput, setShowInput] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [expandedComments, setExpandedComments] = useState({});
   const [overflowingComments, setOverflowingComments] = useState({});
   const commentRefs = useRef({});
-  const { userId } = getUserInfo();
+  const userInfo = getUserInfo();
+  const userId = userInfo?.userId;
+  const [userVote, setUserVote] = useState(0);
+  const [commentVotes, setCommentVotes] = useState({});
 
   const renderPromptWithLineBreaks = (text) => {
     return text.split('\n').map((line, index) => (
@@ -30,16 +33,61 @@ const PromptView = () => {
     ));
   };
 
+  const renderVoteButton = (voteType) => {
+    const isUpvote = voteType === 1;
+    const Icon = isUpvote ? ThumbsUp : ThumbsDown;
+    
+    // Retrieve the user's vote from localStorage
+    const storedVote = localStorage.getItem(`userVote_${id}`);
+    const currentUserVote = storedVote ? parseInt(storedVote, 10) : 0;
+    
+    const isSelected = currentUserVote === voteType;
+    const fillColorClass = isUpvote ? 'text-green-500' : 'text-red-500';
+    const strokeColorClass = isUpvote ? 'stroke-green-600' : 'stroke-red-600';
+
+    return (
+      <button 
+        onClick={() => handleVote(voteType)} 
+        className={`flex items-center p-1 rounded hover:bg-gray-200 ${isSelected ? 'bg-gray-200' : ''}`}
+      >
+        <Icon 
+          size={22} 
+          className={`
+            ${fillColorClass} 
+            ${isSelected ? `fill-current ${strokeColorClass}` : 'stroke-current'}
+          `} 
+        />
+      </button>
+    );
+  };
+
   useEffect(() => {
     const fetchPromptAndComments = async () => {
       setLoading(true);
       try {
         const promptData = await fetchPromptById(id);
         setPrompt(promptData);
+        
+        // Retrieve the user's vote from localStorage
+        const storedVote = localStorage.getItem(`userVote_${id}`);
+        const userVoteValue = storedVote ? parseInt(storedVote, 10) : 0;
+        
+        setUserVote(userVoteValue);
+        
         const commentsData = await fetchComments(promptData.comments);
         setComments(commentsData);
+
+        // Load comment votes from localStorage
+        const storedCommentVotes = {};
+        commentsData.forEach(comment => {
+          const storedVote = localStorage.getItem(`commentVote_${comment._id}`);
+          if (storedVote) {
+            storedCommentVotes[comment._id] = parseInt(storedVote, 10);
+          }
+        });
+        setCommentVotes(storedCommentVotes);
       } catch (err) {
-        setError(err.message);
+        handleError(err.message);
       } finally {
         setLoading(false);
       }
@@ -76,6 +124,14 @@ const PromptView = () => {
     setShowInput(!showInput);
   };
 
+  const handleError = (errorMessage) => {
+    setError(errorMessage);
+  };
+
+  const clearError = () => {
+    handleError(null);
+  };
+
   const handleAddComment = async () => {
     if (newComment.trim() && isAuthenticated) {
       try {
@@ -85,27 +141,118 @@ const PromptView = () => {
         setPrompt(updatedPrompt);
         setNewComment('');
       } catch (err) {
-        setError(err.message);
+        handleError(err.message);
       }
     }
   };
 
-  const handleCommentVote = (index, value) => {
-    const updatedComments = [...comments];
-    updatedComments[index].votes += value;
-    setComments(updatedComments);
+  const handleCommentVote = async (commentId, value) => {
+    if (isAuthenticated) {
+      try {
+        if (!userId) {
+          handleError('Unable to retrieve user information.');
+          return;
+        }
+        console.log(commentId, value);
+        let voteValue;
+        if (commentVotes[commentId] === value) {
+          // If the user clicks the same vote again, remove their vote
+          voteValue = 0;
+        } else {
+          // Otherwise, set the new vote
+          voteValue = value;
+        }
+
+        // Update the comment vote in the backend
+        const updatedComment = await updateComment(commentId, { vote: voteValue, userId });
+        
+        // Update the local state
+        setComments(comments.map(comment => 
+          comment._id === commentId ? updatedComment : comment
+        ));
+        
+        setCommentVotes(prev => ({
+          ...prev,
+          [commentId]: voteValue
+        }));
+        
+        // Store the user's vote in localStorage
+        localStorage.setItem(`commentVote_${commentId}`, voteValue.toString());
+      } catch (err) {
+        handleError('Failed to update comment vote. Please try again.');
+      }
+    } else {
+      handleError('You must be logged in to vote.');
+    }
   };
 
-  const handleVote = (value) => {
-    setVotes(votes + value);
+  const renderCommentVoteButton = (commentId, voteType) => {
+    const isUpvote = voteType === 1;
+    const Icon = isUpvote ? ThumbsUp : ThumbsDown;
+    
+    const currentUserVote = commentVotes[commentId] || 0;
+    
+    const isSelected = currentUserVote === voteType;
+    const fillColorClass = isUpvote ? 'text-green-500' : 'text-red-500';
+    const strokeColorClass = isUpvote ? 'stroke-green-600' : 'stroke-red-600';
+
+    return (
+      <button 
+        onClick={() => handleCommentVote(commentId, voteType)} 
+        className={`flex items-center p-1 rounded hover:bg-gray-200`}
+      >
+        <Icon 
+          size={16} 
+          className={`
+            ${fillColorClass} 
+            ${isSelected ? `fill-current ${strokeColorClass}` : 'stroke-current'}
+          `} 
+        />
+      </button>
+    );
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  const handleVote = async (value) => {
+    if (isAuthenticated) {
+      try {
+        if (!userId) {
+          handleError('Unable to retrieve user information.');
+          return;
+        }
+
+        let voteValue;
+        if (userVote === value) {
+          // If the user clicks the same vote again, remove their vote
+          voteValue = 0;
+        } else {
+          // Otherwise, set the new vote
+          voteValue = value;
+        }
+
+        const updatedPrompt = await updatePrompt(id, { vote: voteValue, userId });
+        setPrompt(updatedPrompt);
+        setUserVote(voteValue);
+        
+        // Store the user's vote in localStorage
+        localStorage.setItem(`userVote_${id}`, voteValue.toString());
+      } catch (err) {
+        handleError('Failed to update vote. Please try again.');
+      }
+    } else {
+      handleError('You must be logged in to vote.');
+    }
+  };
+
+  if (loading) return (
+    <div className="flex justify-center items-center h-screen">
+      <Loader className="animate-spin text-blue-500" size={48} />
+    </div>
+  );
   if (!prompt) return <div>No prompt found</div>;
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-gray-200 shadow-lg rounded-lg mt-4 mb-10">
+      {error && <ErrorOverlay message={error} onClose={clearError} />}
       {/* Prompt Section with Attachments */}
       <div className="mb-6 p-4 bg-white rounded-lg">
         <h2 className="text-xl font-bold mb-2 px-5 py-2">{prompt.title}</h2>
@@ -138,17 +285,16 @@ const PromptView = () => {
         <span className="flex items-center mr-4"><Clock size={16} className="mr-1" /> Last edited: {new Date(prompt.createdAt).toLocaleDateString()}</span>
         <span className="flex items-center"><Tag size={16} className="mr-1" /> {prompt.tags.join(', ')}</span>
         <div className="flex items-end ml-auto mr-2">
-        <button onClick={() => handleVote(1)} className="flex items-center mr-2 p-1 rounded hover:bg-gray-200">
-          <ThumbsUp size={22} className="text-green-500" />
-        </button>
-        <span className="text-lg font-bold">{votes}</span>
-        <button onClick={() => handleVote(-1)} className="flex items-center ml-2 p-1 rounded hover:bg-gray-200">
-          <ThumbsDown size={22} className="text-red-500" />
-        </button>
+        {/* Voting */}
+        <div className="flex items-center ml-auto mr-2">
+          {renderVoteButton(1)}
+          <span className="text-lg font-bold mx-2">{prompt.upvotes-prompt.downvotes}</span>
+          {renderVoteButton(-1)}
+        </div>
       </div>
       </div>
 
-      {/* Voting */}
+      
 
 
       {/* Comments Section */}
@@ -210,13 +356,9 @@ const PromptView = () => {
                   )}
                 </div>
                 <div className="flex items-center pr-1">
-                  <button onClick={() => handleCommentVote(index, 1)} className="mr-1">
-                    <ThumbsUp size={12} className="text-green-500" />
-                  </button>
-                  <span className="font-bold text-sm mx-1">{comment.upvotes-comment.downvotes}</span>
-                  <button onClick={() => handleCommentVote(index, -1)} className="ml-1">
-                    <ThumbsDown size={12} className="text-red-500" />
-                  </button>
+                  {renderCommentVoteButton(comment._id, 1)}
+                  <span className="font-bold text-sm mx-1">{comment.upvotes - comment.downvotes}</span>
+                  {renderCommentVoteButton(comment._id, -1)}
                 </div>
               </div>
               <div className="flex items-center justify-between px-1 text-sm text-gray-600">

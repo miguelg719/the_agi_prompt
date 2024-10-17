@@ -33,7 +33,17 @@ const promptSchema = new mongoose.Schema({
   },
   tags: {
     type: [String]  
-  }
+  },
+  userVotes: [{
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    vote: {
+      type: Number,
+      enum: [-1, 0, 1]
+    }
+  }]
 }, { timestamps: true });
 
 const Prompt = mongoose.model('Prompt', promptSchema);
