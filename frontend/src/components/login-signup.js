@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDiscord, faGoogle } from '@fortawesome/free-brands-svg-icons';
-import { User, Lock, Mail, CheckCircle } from 'lucide-react';
+import { User, Lock, Mail, CheckCircle, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 
@@ -21,6 +21,8 @@ const LoginSignup = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [redirectToLogin, setRedirectToLogin] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (redirectToLogin) {
@@ -35,11 +37,36 @@ const LoginSignup = () => {
     }
   }, [redirectToLogin]);
 
+  const validatePassword = (password) => {
+    if (isLogin) return ''; // Skip validation for login
+
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumber = /\d/.test(password);
+
+    if (password.length < minLength) {
+      return 'Password must be at least 8 characters long';
+    }
+    if (!hasUpperCase || !hasLowerCase) {
+      return 'Password must contain both uppercase and lowercase letters';
+    }
+    if (!hasNumber) {
+      return 'Password must contain at least one number';
+    }
+    return '';
+  };
+
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+
+    if (name === 'password' && !isLogin) {
+      setPasswordError(validatePassword(value));
+    }
   };
 
   const clearForm = () => {
@@ -54,6 +81,11 @@ const LoginSignup = () => {
     e.preventDefault();
     setError('');
     setSuccess(false);
+
+    if (!isLogin && passwordError) {
+      setError('Please fix the password issues before submitting.');
+      return;
+    }
 
     try {
       if (isLogin) {
@@ -70,7 +102,7 @@ const LoginSignup = () => {
           navigate('/profile');
         }, 1000);
       } else {
-        // Registration logic (keep existing code)
+        // Registration logic
         const response = await axios.post('http://localhost:3000/api/users/register', formData);
         setSuccess(true);
         setRedirectToLogin(true);
@@ -92,6 +124,10 @@ const LoginSignup = () => {
     setSuccess(false);
     setError('');
     clearForm();
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -164,16 +200,35 @@ const LoginSignup = () => {
                   <Lock className="h-5 w-5 text-gray-500" />
                 </span>
                 <input
-                  className="w-full bg-gray-700 text-white rounded pl-10 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className={`w-full bg-gray-700 text-white rounded pl-10 pr-10 p-2 focus:outline-none focus:ring-2 ${
+                    !isLogin && passwordError ? 'focus:ring-red-500' : 'focus:ring-blue-500'
+                  }`}
                   id="password"
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="Enter your password"
                   required
                 />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 flex items-center pr-3"
+                  onClick={togglePasswordVisibility}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5 text-gray-500" />
+                  ) : (
+                    <Eye className="h-5 w-5 text-gray-500" />
+                  )}
+                </button>
               </div>
+              {!isLogin && passwordError && (
+                <div className="mt-2 text-red-500 text-sm flex items-center">
+                  <AlertCircle className="h-4 w-4 mr-1" />
+                  {passwordError}
+                </div>
+              )}
             </div>
             <button
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
