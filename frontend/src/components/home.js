@@ -13,7 +13,7 @@ const Home = () => {
 
   useEffect(() => {
     const fetchPrompts = async () => {
-      console.log(`Fetching prompts from ${API_URL}`);
+      // console.log(`Fetching prompts from ${API_URL}`);
       const response = await fetch(`${API_URL}/api/prompts`);
       const data = await response.json();
       setPrompts(data);
