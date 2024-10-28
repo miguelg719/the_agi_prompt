@@ -265,7 +265,7 @@ const PromptView = () => {
             <Paperclip size={20} className="mr-2" /> Attachments
           </h3>
           <div className="flex flex-wrap gap-2 mb-2">
-            <img src="/images/screenshot.png" alt="Screenshot 1" className="w-24 h-24 object-cover rounded" />
+            <img src="url('/images/image.png')" alt="Screenshot 1" className="w-24 h-24 object-cover rounded" />
           </div>
           <div className="flex flex-wrap gap-4">
             {/* <a href="https://x.com/AmandaAskell/status/1765207842993434880/photo/1" className="text-blue-500 hover:underline flex items-center"> */}
