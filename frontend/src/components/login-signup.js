@@ -91,7 +91,7 @@ const LoginSignup = () => {
     try {
       if (isLogin) {
         // Login logic
-        const response = await axios.post(`${API_URL}:3000/api/users/login`, {
+        const response = await axios.post(`${API_URL}/api/users/login`, {
           username: formData.username,
           password: formData.password
         });

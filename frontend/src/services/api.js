@@ -8,12 +8,12 @@ export const loginUser = async (username, password) => {
 };
 
 export const registerUser = async (username, email, password) => {
-  const response = await axios.post(`${API_URL}/users/register`, { username, email, password });
+  const response = await axios.post(`${API_URL}/api/users/register`, { username, email, password });
   return response.data;
 };
 
 export const getUserProfile = async (token) => {
-  const response = await axios.get(`${API_URL}/users/profile`, {
+  const response = await axios.get(`${API_URL}/api/users/profile`, {
     headers: { ...getAuthHeader() }
   });
   return response.data;
@@ -21,7 +21,7 @@ export const getUserProfile = async (token) => {
 
 export const fetchPromptById = async (id) => {
   try {
-    const response = await axios.get(`${API_URL}/prompts/${id}`);
+    const response = await axios.get(`${API_URL}/api/prompts/${id}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching prompt by id:', error);
@@ -31,7 +31,7 @@ export const fetchPromptById = async (id) => {
 
 export const createPrompt = async (promptData) => {
   try {
-      const response = await axios.post(`${API_URL}/prompts`, promptData);
+      const response = await axios.post(`${API_URL}/api/prompts`, promptData);
       return response.data;
   } catch (error) {
       console.error('Error creating prompt:', error);
@@ -41,7 +41,7 @@ export const createPrompt = async (promptData) => {
 
 export const updatePrompt = async (id, promptData) => {
   try {
-    const response = await axios.put(`${API_URL}/prompts/${id}`, promptData, {
+    const response = await axios.put(`${API_URL}/api/prompts/${id}`, promptData, {
       headers: { ...getAuthHeader() }
     });
     return response.data;
@@ -53,7 +53,7 @@ export const updatePrompt = async (id, promptData) => {
 
 export const deletePrompt = async (id) => {
   try {
-      const response = await axios.delete(`${API_URL}/prompts/${id}`);
+      const response = await axios.delete(`${API_URL}/api/prompts/${id}`);
       return response.data;
   } catch (error) {
       console.error('Error deleting prompt:', error);
@@ -64,7 +64,7 @@ export const deletePrompt = async (id) => {
 export const fetchComments = async (commentList) => {
   try {
     const queryString = commentList.map(id => `ids[]=${id}`).join('&');
-    const response = await axios.get(`${API_URL}/comments/?${queryString}`);
+    const response = await axios.get(`${API_URL}/api/comments/?${queryString}`);
     return response.data;
   } catch (error) {
     throw new Error('Failed to fetch comments');
@@ -73,7 +73,7 @@ export const fetchComments = async (commentList) => {
 
 export const createComment = async (promptId, userId, body) => {
   try {
-    const response = await axios.post(`${API_URL}/comments`, {
+    const response = await axios.post(`${API_URL}/api/comments`, {
       prompt: promptId,
       user: userId,
       body
@@ -86,7 +86,7 @@ export const createComment = async (promptId, userId, body) => {
 
 export const updateComment = async (id, commentData) => {
   try {
-    const response = await axios.put(`${API_URL}/comments/${id}`, commentData, {
+    const response = await axios.put(`${API_URL}/api/comments/${id}`, commentData, {
       headers: { ...getAuthHeader() }
     });
     return response.data;
