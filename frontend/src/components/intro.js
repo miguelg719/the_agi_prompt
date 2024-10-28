@@ -24,7 +24,7 @@ const Intro = () => {
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: `url(${process.env.PUBLIC_URL}/images/image.png)`,
+            backgroundImage: "url('/images/image.png')",
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
             transform: `translateY(${scrollPosition * 0.5}px)`,
           }}
