@@ -22,6 +22,10 @@
     {
       "src": "/(.*)",
       "dest": "/build/index.html"
+    },
+    {
+      "src": "/images/(.*)",
+      "dest": "/images/$1"
     }
   ]
 }

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const Intro = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
-  console.log(`process.env.PUBLIC_URL: ${process.env.PUBLIC_URL}`);
+  // console.log(`process.env.PUBLIC_URL: ${process.env.PUBLIC_URL}`);
   useEffect(() => {
     const handleScroll = () => {
       setScrollPosition(window.scrollY);
