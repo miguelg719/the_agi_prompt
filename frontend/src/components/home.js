@@ -4,6 +4,7 @@ import PromptCard from './prompt-card';
 import FeaturedCard from './featured-card';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
+import { API_URL } from '../api/config';
 
 const Home = () => {
 
@@ -12,7 +13,7 @@ const Home = () => {
 
   useEffect(() => {
     const fetchPrompts = async () => {
-      const response = await fetch('http://localhost:3000/api/prompts');
+      const response = await fetch(`${API_URL}/api/prompts`);
       const data = await response.json();
       setPrompts(data);
     };
