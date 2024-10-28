@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const uri = "mongodb+srv://admin:admin@cluster0.drzuv.mongodb.net/agiprompt?retryWrites=true&w=majority&appName=Cluster0";
+const uri = process.env.MONGO_URI;
 
 const connectDB = async () => {
   try {
