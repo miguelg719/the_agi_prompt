@@ -34,7 +34,7 @@ A modern web application for sharing, collaborating on, and discussing AI prompt
 1. Clone the repository:
 ```bash
 git clone https://github.com/miguelg719/the_agi_prompt.git
-cd the_agi_prompt
+cd the_agi_prompt/frontend
 ```
 
 2. Install dependencies:
