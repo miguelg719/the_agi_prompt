@@ -20,6 +20,9 @@ const connectDB = require('./config/db');
 connectDB();  // Connect to MongoDB Atlas
 
 // API Endpoints
+app.get("/", (req, res) => {
+  res.send("Server deployed and running on vercel.");
+});
 
 // Routes
 app.use('/api/prompts', promptRoutes); 
@@ -30,5 +33,5 @@ app.use('/api/comments', commentRoutes);
 
 // Start server
 app.listen(port, () => {
-  console.log(`Server listening at http://localhost:${port}`);
+  console.log(`Server running on port ${port}`);
 });
