@@ -20,12 +20,12 @@
       "dest": "/build/manifest.json"
     },
     {
-      "src": "/(.*)",
-      "dest": "/build/index.html"
-    },
-    {
       "src": "/images/(.*)",
       "dest": "/build/images/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/build/index.html"
     }
   ]
 }
