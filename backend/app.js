@@ -4,9 +4,10 @@ const userRoutes = require('./routes/userRoutes');
 const promptRoutes = require('./routes/promptRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 const app = express();
-const port = process.env.PORT || 3000;
 
 require('dotenv').config();
+
+const port = process.env.PORT || 5001;
 
 // Enable CORS for all origins 
 app.use(cors()); 
