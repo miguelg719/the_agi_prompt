@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "/static/css/main.ba059e22.css",
+    "main.js": "/static/js/main.6e5f9816.js",
+    "static/js/453.6b42db85.chunk.js": "/static/js/453.6b42db85.chunk.js",
+    "static/media/montserrat-latin-400-normal.woff": "/static/media/montserrat-latin-400-normal.b48c3d9a8c0a49c1c7b4.woff",
+    "static/media/montserrat-latin-ext-400-normal.woff": "/static/media/montserrat-latin-ext-400-normal.cf42d14e809c6fdc0929.woff",
+    "static/media/montserrat-latin-400-normal.woff2": "/static/media/montserrat-latin-400-normal.9ef09180105730e3cb92.woff2",
+    "static/media/montserrat-latin-ext-400-normal.woff2": "/static/media/montserrat-latin-ext-400-normal.83d2d15dd908a3cf998f.woff2",
+    "static/media/montserrat-cyrillic-ext-400-normal.woff": "/static/media/montserrat-cyrillic-ext-400-normal.183f43730b586802d1a0.woff",
+    "static/media/montserrat-cyrillic-400-normal.woff": "/static/media/montserrat-cyrillic-400-normal.439a7e91c905d22b3543.woff",
+    "static/media/montserrat-cyrillic-ext-400-normal.woff2": "/static/media/montserrat-cyrillic-ext-400-normal.32618c7b62b4ab3c0aff.woff2",
+    "static/media/montserrat-subrayada-latin-400-normal.woff": "/static/media/montserrat-subrayada-latin-400-normal.3f64d81b3304b643de8a.woff",
+    "static/media/montserrat-cyrillic-400-normal.woff2": "/static/media/montserrat-cyrillic-400-normal.4f7a9c3142f9879900c9.woff2",
+    "static/media/montserrat-subrayada-latin-400-normal.woff2": "/static/media/montserrat-subrayada-latin-400-normal.1ff7df5d91f8d07f5057.woff2",
+    "static/media/montserrat-vietnamese-400-normal.woff": "/static/media/montserrat-vietnamese-400-normal.44e6450ead6330cb0b77.woff",
+    "static/media/montserrat-vietnamese-400-normal.woff2": "/static/media/montserrat-vietnamese-400-normal.176348415471f3e062e6.woff2",
+    "index.html": "/index.html",
+    "main.ba059e22.css.map": "/static/css/main.ba059e22.css.map",
+    "main.6e5f9816.js.map": "/static/js/main.6e5f9816.js.map",
+    "453.6b42db85.chunk.js.map": "/static/js/453.6b42db85.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ba059e22.css",
+    "static/js/main.6e5f9816.js"
+  ]
+}
