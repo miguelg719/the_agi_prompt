@@ -115,8 +115,8 @@ const PromptLeaderboard = () => {
 
   const filteredPrompts = prompts
     .filter(prompt => 
-      prompt.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      prompt.author.toLowerCase().includes(searchTerm.toLowerCase())
+      prompt.title.toLowerCase().includes(searchTerm.toLowerCase())
+      // prompt.author.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .filter(prompt => 
       filterTerm === '' ||
