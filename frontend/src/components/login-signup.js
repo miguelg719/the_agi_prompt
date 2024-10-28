@@ -5,6 +5,7 @@ import { faDiscord, faGoogle } from '@fortawesome/free-brands-svg-icons';
 import { User, Lock, Mail, CheckCircle, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { API_URL } from '../api/config';
 
 const LoginSignup = () => {
   const { login } = useAuth();
@@ -90,7 +91,7 @@ const LoginSignup = () => {
     try {
       if (isLogin) {
         // Login logic
-        const response = await axios.post('http://localhost:3000/api/users/login', {
+        const response = await axios.post(`${API_URL}:3000/api/users/login`, {
           username: formData.username,
           password: formData.password
         });
@@ -103,7 +104,7 @@ const LoginSignup = () => {
         }, 1000);
       } else {
         // Registration logic
-        const response = await axios.post('http://localhost:3000/api/users/register', formData);
+        const response = await axios.post(`${API_URL}/api/users/register`, formData);
         setSuccess(true);
         setRedirectToLogin(true);
         console.log('Registration successful:', response.data);

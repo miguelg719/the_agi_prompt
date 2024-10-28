@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { getUserInfo } from '../utils/auth';
 import { deletePrompt } from '../services/api';
+import { API_URL } from '../api/config';
 
 const ProfilePage = () => {
   const [userData, setUserData] = useState({
@@ -47,7 +48,7 @@ const ProfilePage = () => {
   const fetchUserData = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:3000/api/users/profile', {
+      const response = await axios.get(`${API_URL}/api/users/profile`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUserData(response.data);
@@ -58,7 +59,7 @@ const ProfilePage = () => {
 
   const fetchUserPrompts = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:3000/api/prompts/user/${userId}`);
+      const response = await axios.get(`${API_URL}/api/prompts/user/${userId}`);
       setUserPrompts(response.data);
     } catch (error) {
       setError('Failed to fetch user prompts');
@@ -90,7 +91,7 @@ const ProfilePage = () => {
     try {
       // TODO: refactor 
       const token = localStorage.getItem('token');
-      await axios.put('http://localhost:3000/api/users/profile', userData, {
+      await axios.put(`${API_URL}/api/users/profile`, userData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSuccess('Profile updated successfully');

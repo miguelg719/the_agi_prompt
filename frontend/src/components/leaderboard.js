@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, ChevronDown, Tag } from 'lucide-react';
 import LeaderboardCard from './leaderboard-card';
 import { Link } from 'react-router-dom';
+import { API_URL } from '../api/config';
 
 const PromptLeaderboard = () => {
   const [prompts, setPrompts] = useState([]);
@@ -104,7 +105,7 @@ const PromptLeaderboard = () => {
     // ];
     // setPrompts(dummyData);
     const fetchPrompts = async () => {
-      const response = await fetch('http://localhost:3000/api/prompts');
+      const response = await fetch(`${API_URL}/api/prompts`);
       const data = await response.json();
       console.log(data);
       setPrompts(data);
