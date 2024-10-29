@@ -3,14 +3,14 @@ import { Search, ChevronDown, Tag } from 'lucide-react';
 import LeaderboardCard from './leaderboard-card';
 import { Link } from 'react-router-dom';
 import { API_URL } from '../api/config';
+import { useQuery } from '@tanstack/react-query';
+import { Loader2 } from 'lucide-react';
 
 const PromptLeaderboard = () => {
-  const [prompts, setPrompts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterTerm, setFilterTerm] = useState('');
 
   // Simulated data - in a real app, you'd fetch this from an API
-  useEffect(() => {
     // const dummyData = [
     //   {
     //     id: 1,
@@ -104,14 +104,31 @@ const PromptLeaderboard = () => {
     //   }
     // ];
     // setPrompts(dummyData);
-    const fetchPrompts = async () => {
+  const { data: prompts = [], isLoading, error } = useQuery({
+    queryKey: ['prompts'],
+    queryFn: async () => {
       const response = await fetch(`${API_URL}/api/prompts`);
-      const data = await response.json();
-      console.log(data);
-      setPrompts(data);
-    };
-    fetchPrompts();
-  }, []);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    }
+  });
+  
+  if (isLoading) {
+    return (
+      <div className="bg-gray-900 min-h-screen flex items-center justify-center">
+        <Loader2 className="h-12 w-12 text-blue-500 animate-spin" />
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div className="bg-gray-900 min-h-screen flex items-center justify-center">
+        <p className="text-white text-xl">Error: {error.message}</p>
+      </div>
+    );
+  }
 
   const filteredPrompts = prompts
     .filter(prompt => 

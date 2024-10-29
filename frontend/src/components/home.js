@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { API_URL } from '../api/config';
 import { useQuery } from '@tanstack/react-query';
+import { Loader2 } from 'lucide-react';
 
 
 const Home = () => {
@@ -24,9 +25,20 @@ const Home = () => {
     }
   });
 
-  // Add loading and error states (optional but recommended)
-  if (isLoading) return <div className="text-white">Loading...</div>;
-  if (error) return <div className="text-red-500">Error: {error.message}</div>;
+  if (isLoading) {
+    return (
+      <div className="bg-gray-900 min-h-screen flex items-center justify-center">
+        <Loader2 className="h-12 w-12 text-blue-500 animate-spin" />
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div className="bg-gray-900 min-h-screen flex items-center justify-center">
+        <p className="text-white text-xl">Error: {error.message}</p>
+      </div>
+    );
+  }
 
   // Sample data for demonstration
   const samplePrompts = [
