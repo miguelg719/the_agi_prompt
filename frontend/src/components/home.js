@@ -27,9 +27,6 @@ const Home = () => {
     }
   });
 
-  console.log('Search Term:', searchTerm);
-  console.log('Prompts:', prompts);
-
   const filteredPrompts = searchTerm
     ? prompts.filter(prompt =>
         prompt.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -38,8 +35,6 @@ const Home = () => {
       )
     : prompts;
   
-  console.log('Filtered Prompts:', filteredPrompts);
-
   if (isLoading) {
     return (
       <div className="bg-gray-900 min-h-screen flex items-center justify-center">
