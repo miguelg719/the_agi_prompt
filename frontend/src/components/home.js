@@ -5,21 +5,28 @@ import FeaturedCard from './featured-card';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { API_URL } from '../api/config';
+import { useQuery } from '@tanstack/react-query';
+
 
 const Home = () => {
 
   const { isAuthenticated } = useAuth();
-  const [prompts, setPrompts] = useState([]);
 
-  useEffect(() => {
-    const fetchPrompts = async () => {
-      // console.log(`Fetching prompts from ${API_URL}`);
+  // Replace useState and useEffect with useQuery
+  const { data: prompts = [], isLoading, error } = useQuery({
+    queryKey: ['prompts'],
+    queryFn: async () => {
       const response = await fetch(`${API_URL}/api/prompts`);
-      const data = await response.json();
-      setPrompts(data);
-    };
-    fetchPrompts();
-  }, []);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    }
+  });
+
+  // Add loading and error states (optional but recommended)
+  if (isLoading) return <div className="text-white">Loading...</div>;
+  if (error) return <div className="text-red-500">Error: {error.message}</div>;
 
   // Sample data for demonstration
   const samplePrompts = [
