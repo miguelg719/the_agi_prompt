@@ -40,3 +40,17 @@
 .scrollbar-hidden::-webkit-scrollbar {
   display: none;
 }
+
+@keyframes gradient-x {
+  0%, 100% {
+    background-size: 200% 100%;
+    background-position: left center;
+  }
+  50% {
+    background-position: right center;
+  }
+}
+
+.animate-gradient-x {
+  animation: gradient-x 15s ease infinite;
+}
