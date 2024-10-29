@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Search, ChevronDown, Plus, Tag} from 'lucide-react';
 import PromptCard from './prompt-card';
 import FeaturedCard from './featured-card';
@@ -12,6 +12,8 @@ import { Loader2 } from 'lucide-react';
 const Home = () => {
 
   const { isAuthenticated } = useAuth();
+  const [searchTerm, setSearchTerm] = useState('');
+
 
   // Replace useState and useEffect with useQuery
   const { data: prompts = [], isLoading, error } = useQuery({
@@ -24,6 +26,19 @@ const Home = () => {
       return response.json();
     }
   });
+
+  console.log('Search Term:', searchTerm);
+  console.log('Prompts:', prompts);
+
+  const filteredPrompts = searchTerm
+    ? prompts.filter(prompt =>
+        prompt.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        prompt.author?.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        false
+      )
+    : prompts;
+  
+  console.log('Filtered Prompts:', filteredPrompts);
 
   if (isLoading) {
     return (
@@ -123,10 +138,12 @@ const Home = () => {
           <div className="flex-grow">
             <div className="relative">
               <input
-                type="text"
-                placeholder="Search"
-                className="w-full bg-gray-800 text-white border border-gray-700 rounded-full py-2 px-4 pl-10 focus:outline-none focus:border-blue-500"
-              />
+                  type="text"
+                  placeholder="Search prompts or authors"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full bg-gray-800 text-white border border-gray-700 rounded-full py-2 px-4 pl-10 focus:outline-none focus:border-blue-500"
+                />
               <Search className="absolute left-3 top-2.5 text-gray-400" size={20} />
             </div>
           </div>
@@ -164,7 +181,7 @@ const Home = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
               <div className="max-h-screen overflow-y-auto scrollbar-hidden">
-                {prompts.map((prompt) => (
+                {filteredPrompts.map((prompt) => (
                   <PromptCard key={prompt.id} {...prompt} />
                 ))}
               </div>

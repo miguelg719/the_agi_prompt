@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Search, ChevronDown, Tag } from 'lucide-react';
 import LeaderboardCard from './leaderboard-card';
 import { Link } from 'react-router-dom';
