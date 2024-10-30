@@ -79,11 +79,11 @@ const Intro = () => {
       <section 
         id="features"
         ref={featuresRef}
-        className="py-20 px-4"
+        className="pt-20 pb-28 px-4"
       >
         <div className={`max-w-6xl mx-auto transition-all duration-1000 ${isVisible.features ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-            Revolutionize AI Development
+          <h2 className="text-4xl md:text-5xl font-bold p-1 mb-16 text-center bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            Aligning AI and Humans
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <FeatureCard 
@@ -93,8 +93,8 @@ const Intro = () => {
               gradient="from-blue-500 to-cyan-500"
             />
             <FeatureCard 
-              title="Advanced Voting"
-              description="Leverage collective intelligence through our sophisticated voting system to surface the most effective and innovative prompts."
+              title="Zero-Bias Benchmarks"
+              description="Leverage diversity and inclusion through sophisticated bias-surfacing datasets and supportive voting system to quantify inherent bias."
               icon={<Vote className="w-8 h-8" />}
               gradient="from-purple-500 to-pink-500"
             />
@@ -114,13 +114,18 @@ const Intro = () => {
         ref={aboutRef}
         className="py-20 px-4 bg-gradient-to-b from-gray-900 to-black"
       >
-        <div className={`max-w-4xl mx-auto transition-all duration-1000 ${isVisible.about ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <div className={`max-w-5xl mx-auto transition-all duration-1000 ${isVisible.about ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <div className="bg-gray-800/50 backdrop-blur-lg rounded-2xl p-8 md:p-12 shadow-xl">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gradient bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               Shaping the Future Together
+              
             </h2>
             <p className="text-lg text-gray-300 leading-relaxed">
-              Our platform brings together AI enthusiasts, researchers, and developers in a collaborative environment designed to push the boundaries of artificial intelligence. Through shared knowledge and collective experimentation, we're creating a foundation for the next generation of AI innovations.
+              The world is in a race to build superintelligent systems, and the exponential growth of AI-generated content on the internet is spreading its inherent biases like wildfire.
+              Although there are ongoing efforts to align AI’s goals with human values, this process within major firms is often opaque and controlled by a small, homogeneous group of people.
+              <br></br><br></br>
+              <span className='font-logo text-xl font-bold'>The AGI Prompt</span>  offers a solution by fostering diversity and involving people from numerous backgrounds.
+              It promotes a democratic process to collaboratively define essential safeguards and guide the general direction of AI development.
             </p>
           </div>
         </div>
@@ -130,14 +135,14 @@ const Intro = () => {
       <section 
         id="cta"
         ref={ctaRef}
-        className="py-20 px-4 bg-gradient-to-b from-black to-gray-900"
+        className="py-20 px-2 bg-gradient-to-b from-black to-gray-900"
       >
         <div className={`max-w-4xl mx-auto text-center transition-all duration-1000 ${isVisible.cta ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-            Join the Revolution
+            Join the Community
           </h2>
           <p className="text-xl mb-8 text-gray-300">
-            Be part of the community shaping the future of artificial intelligence
+            Be part of shaping the future of artificial intelligence
           </p>
           <Link to="/login">
             <button className="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full text-lg font-semibold overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/30">

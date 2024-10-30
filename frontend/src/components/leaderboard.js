@@ -130,6 +130,8 @@ const PromptLeaderboard = () => {
     );
   }
 
+  // TODO: change to remove ability to find prompts not in the top 10
+  // TODO: fix index
   const filteredPrompts = prompts
     .filter(prompt => 
       prompt.title.toLowerCase().includes(searchTerm.toLowerCase())
