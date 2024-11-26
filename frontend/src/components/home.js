@@ -63,7 +63,7 @@ const Home = () => {
     },
     {
       id: 2,
-      prompt: "Create an AGI with the ability to explain its reasoning process in natural language",
+      prompt: "AI with the ability to explain its reasoning process in natural language",
       votes: 95,
       comments: 31,
       author: "ExplainableAI",
@@ -72,7 +72,7 @@ const Home = () => {
     },
     {
       id: 3,
-      prompt: "Design an AGI framework that can seamlessly integrate and utilize multiple specialized AI models",
+      prompt: "Create a framework that can seamlessly integrate and utilize multiple specialized AI models",
       votes: 82,
       comments: 27,
       author: "AIArchitect",
