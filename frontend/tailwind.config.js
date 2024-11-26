@@ -9,6 +9,12 @@ module.exports = {
         sans: ['Montserrat', 'sans-serif'],
         logo: ['Montserrat Subrayada', 'sans-serif'],
       },
+      fontWeight: {
+        normal: 400,
+        semibold: 400,
+        bold: 400, 
+        extrabold: 500,
+      },
     },
   },
   plugins: [],

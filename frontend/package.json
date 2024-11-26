@@ -1,6 +1,6 @@
 {
   "name": "the_agi_prompt",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "private": true,
   "dependencies": {
     "@fontsource/montserrat": "^5.0.18",
@@ -18,6 +18,7 @@
     "lucide-react": "^0.418.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-markdown": "^9.0.1",
     "react-router-dom": "^6.26.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"

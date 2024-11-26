@@ -5,6 +5,7 @@ import { getUserInfo } from '../utils/auth';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ErrorOverlay from './error-overlay';
+import ReactMarkdown from 'react-markdown';
 
 const PromptView = () => {
   const { id } = useParams();
@@ -24,13 +25,25 @@ const PromptView = () => {
   const [userVote, setUserVote] = useState(0);
   const [commentVotes, setCommentVotes] = useState({});
 
-  const renderPromptWithLineBreaks = (text) => {
-    return text.split('\n').map((line, index) => (
-      <React.Fragment key={index}>
-        {line}
-        <br />
-      </React.Fragment>
-    ));
+  const renderPromptWithMarkdown = (text) => {
+    return (
+      <ReactMarkdown
+        components={{
+          // Style bold text
+          strong: ({node, ...props}) => <span className="font-extrabold text-sm" {...props} />,
+          // Style links
+          a: ({node, ...props}) => (
+            <a className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer" {...props} />
+          ),
+          // Style horizontal rules
+          hr: ({node, ...props}) => <hr className="my-4 border-t-1 border-gray-200" {...props} />,
+          // Style paragraphs
+          p: ({node, ...props}) => <p className="mb-2" {...props} />,
+        }}
+      >
+        {text}
+      </ReactMarkdown>
+    );
   };
 
   const renderVoteButton = (voteType) => {
@@ -257,7 +270,9 @@ const PromptView = () => {
       <div className="mb-6 p-4 bg-white rounded-lg">
         <h2 className="text-xl font-bold mb-2 px-5 py-2">{prompt.title}</h2>
 
-        <p className="text-gray-700 mb-4 text-justify p-5">{renderPromptWithLineBreaks(prompt.prompt)}</p>
+        <p className="text-gray-700 mb-4 text-justify p-5">
+          {renderPromptWithMarkdown(prompt.prompt)}
+        </p>
         
         {/* Attachments Subsection */}
         <div className="mt-4 border-t pt-4">

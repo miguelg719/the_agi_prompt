@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PlusIcon, Loader2 } from 'lucide-react';
+import { PlusIcon, Loader2, Bold, Link, Minus } from 'lucide-react';
 import { createPrompt } from '../services/api'; 
 import { getUserInfo } from '../utils/auth';
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +15,7 @@ const CreatePrompt = () => {
   const [error, setError] = useState(null);
   const { userId } = getUserInfo(); 
   const navigate = useNavigate();
+  const [selectedText, setSelectedText] = useState({ start: 0, end: 0 });
   
   const handleError = (errorMessage) => {
     setError(errorMessage);
@@ -38,6 +39,29 @@ const CreatePrompt = () => {
 
   const handleRemoveTag = (tagToRemove) => {
     setTags(tags.filter(tag => tag !== tagToRemove));
+  };
+
+  const handleFormat = (type) => {
+    const textarea = document.getElementById('prompt');
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const currentText = prompt;
+
+    let newText;
+    switch (type) {
+      case 'bold':
+        newText = currentText.slice(0, start) + `**${currentText.slice(start, end)}**` + currentText.slice(end);
+        break;
+      case 'link':
+        newText = currentText.slice(0, start) + `[${currentText.slice(start, end)}](url)` + currentText.slice(end);
+        break;
+      case 'divider':
+        newText = currentText.slice(0, start) + `\n---\n` + currentText.slice(end);
+        break;
+      default:
+        newText = currentText;
+    }
+    setPrompt(newText);
   };
 
   const handleSubmit = async (e) => {
@@ -88,21 +112,50 @@ const CreatePrompt = () => {
               className="w-full bg-white p-2 rounded"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Enter prompt title"
+              placeholder="Enter title"
               required
             />
           </div>
 
           <div className="mb-4">
             <label htmlFor="prompt" className="block mb-2 ml-3 text-xl font-semibold">Prompt</label>
-            <textarea
-              id="prompt"
-              className="w-full bg-white p-2 rounded h-32"
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Describe prompt"
-              required
-            ></textarea>
+            <div className="border rounded bg-white">
+              <textarea
+                id="prompt"
+                className="w-full p-2 h-32 focus:outline-none"
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                placeholder="Describe prompt"
+                required
+              ></textarea>
+              <div className="flex gap-2 p-2 border-b">
+                <button
+                  type="button"
+                  onClick={() => handleFormat('bold')}
+                  className="p-1 hover:bg-gray-100 rounded"
+                  title="Bold"
+                >
+                  <Bold size={20} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleFormat('link')}
+                  className="p-1 hover:bg-gray-100 rounded"
+                  title="Add Link"
+                >
+                  <Link size={20} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleFormat('divider')}
+                  className="p-1 hover:bg-gray-100 rounded"
+                  title="Add Divider"
+                >
+                  <Minus size={20} />
+                </button>
+              </div>
+            </div>
+            <p className="text-sm text-gray-600 mt-1">*Supports markdown</p>
           </div>
 
           <div className="mb-6">
