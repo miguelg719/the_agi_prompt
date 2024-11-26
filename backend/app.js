@@ -9,8 +9,16 @@ require('dotenv').config();
 
 const port = process.env.PORT || 5001;
 
-// Enable CORS for all origins 
-app.use(cors()); 
+// Configure CORS with specific options
+app.use(cors({
+  origin: [
+    'https://the-agi-prompt-frontend.vercel.app',
+    'http://localhost:3001' // for local development
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 
 // Handle JSON request bodies
 app.use(express.json());
