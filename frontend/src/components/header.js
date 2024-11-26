@@ -10,7 +10,7 @@ const Header = () => {
 
     return (
         <>
-            <header className="bg-gray-950 text-white py-6 px-8">
+            <header className="bg-gray-950 text-white py-5 px-8">
                 <div className="container mx-auto flex justify-between items-center">
                     {/* Logo */}
                     <Link to="/">
