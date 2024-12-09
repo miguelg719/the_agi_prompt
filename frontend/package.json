@@ -1,6 +1,6 @@
 {
   "name": "the_agi_prompt",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "private": true,
   "dependencies": {
     "@fontsource/montserrat": "^5.0.18",
